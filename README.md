@@ -85,6 +85,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Có thể duyệt lại cùng một nút nhiều lần trong các độ sâu khác nhau (trade-off giữa thời gian và bộ nhớ)
       2.1.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm không có thông tin 
       
+      
 
 
               
