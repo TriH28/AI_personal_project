@@ -94,7 +94,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
       
       ![Uninformed Search](https://github.com/user-attachments/assets/f2f01427-114f-4133-915f-2de905267f40)
       
-      2.1.3 So sánh hiệu suất các thuật toán
+      2.1.3 Nhận xét về hiệu suất các thuật toán
         _ BFS
           + BFS là thuật toán duyệt theo từng lớp (tầng), tức là xét hết các trạng thái có cùng độ sâu trước khi tiến sâu hơn. Trong giải bài toán 8-puzzle, BFS bắt đầu từ trạng thái gốc, sau đó lần lượt mở rộng tất cả các trạng thái con từ vị trí ô trống (blank tile), kiểm tra từng trạng thái mới tạo ra để xem có đạt trạng thái đích hay chưa
           + Ưu điểm chính của BFS là bảo đảm tìm được lời giải ngắn nhất (ít bước nhất), vì nó luôn duyệt theo mức độ sâu tăng dần. Tuy nhiên, nhược điểm lớn nhất là chiếm nhiều bộ nhớ, vì phải lưu toàn bộ các trạng thái ở mỗi mức độ sâu. Với các bài toán có không gian trạng thái lớn như 8-puzzle, BFS có thể nhanh chóng tiêu tốn tài nguyên nếu độ sâu của lời giải tăng cao
@@ -180,6 +180,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Theo dõi các trạng thái đã được xử lý
           . Tránh xét lại các trạng thái trùng lặp
       _ Solution từ Greedy Search
+
         + Đặc điểm 
           . Không đảm bảo tối ưu: Có thể không tìm được đường đi ngắn nhất
           . Không đảm bảo đầy đủ: Có thể bị kẹt trong vòng lặp vô hạn nếu không có cơ chế kiểm soát
@@ -193,7 +194,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Không đảm bảo tìm được solution
           . Chất lượng solution phụ thuộc nhiều vào heuristic
      2.1.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm không có thông tin 
-     
+     ![Informed Search](https://github.com/user-attachments/assets/05bea791-c515-4709-ab8f-cd8aba78b2f7)
+
 
 
 
