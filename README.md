@@ -8,9 +8,10 @@ Báo cáo đồ án cá nhân (8-puzzles)
   
    
     2.1.1 Các thành phần chính của bài toán tìm kiếm và solution
-    
+   
         * Thuật toán BFS  (Breadth-First Search)
-        
+         ![BFS](https://github.com/user-attachments/assets/b2012eec-0dc5-4a25-bf56-e44b4e0a55c9)
+
           _ Các thành phần chính 
             + Hàng đợi (Queue)
               . Chức năng: Lưu trữ các trạng thái cần được xét theo thứ tự FIFO (First-In-First-Out)
@@ -32,6 +33,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
             + Đánh giá hiệu suất
               . Thời gian thực thi: Được đo và hiển thị trên giao diện
         * Thuật toán DFS (Depth-First Search)
+        ![DFS](https://github.com/user-attachments/assets/00621bd7-e316-4bed-8b48-da65dea5d590)
+
           _ Các thành phần chính 
             + Ngăn xếp (Stack)
               . Chức năng: Lưu trữ các trạng thái cần được xét theo thứ tự LIFO (Last-In-First-Out)
@@ -51,6 +54,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
             + Cách biểu diễn solution trong code
               . Cách lưu trữ dùng stack = [(start_state, [start_state], 0)]  
         * Thuật toán UCS (Uniform Cost Search)
+        ![UCS](https://github.com/user-attachments/assets/d5990234-7189-4aae-b3c3-696ac2e479d4)
+
           _ Các thành phần chính 
             + Hàng đợi ưu tiên (Priority Queue)
               . Chức năng: Lưu trữ các trạng thái cần xét theo chi phí tăng dần
@@ -69,6 +74,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Với mỗi trạng thái mới sinh ra, thuật toán lưu lại trạng thái cha để có thể truy vết lại đường đi sau khi tìm thấy goal_state
               . Khi đạt đến trạng thái đích, thuật toán lần ngược từ goal về start để tái tạo lại chuỗi bước đi hoàn chỉnh — đó chính là solution
         * Thuật toán IDDFS (Iterative Deepening Depth-First Search)
+        ![IDDFS](https://github.com/user-attachments/assets/d221a78a-f1c7-44c0-a056-1d91e14961b0)
+
           _ Các thành phần chính 
             + Hàm chính: iddfs(start, goal)
               . Là vòng lặp vô hạn (while True) để thử từng giới hạn độ sâu depth_limit
@@ -90,7 +97,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Mỗi lần gọi DFS đều dùng ít bộ nhớ (chỉ lưu ngăn xếp), không lưu toàn bộ cây trạng thái như BFS
             + Lặp lại tính toán
               . Có thể duyệt lại cùng một nút nhiều lần trong các độ sâu khác nhau (trade-off giữa thời gian và bộ nhớ)
-      2.1.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm không có thông tin 
+      2.1.2 Hình ảnh gif so sánh các thuật toán trong nhóm thuật toán tìm kiếm không có thông tin 
       
       ![Uninformed Search](https://github.com/user-attachments/assets/f2f01427-114f-4133-915f-2de905267f40)
       
@@ -111,7 +118,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
 
   2.2 Các thuật toán tìm kiếm có thông tin (Informed Search)
   
-    2.1.1 Các thành phần chính của bài toán tìm kiếm và solution
+    2.2.1 Các thành phần chính của bài toán tìm kiếm và solution
 
     * Thuật toán A*
     ![A*](https://github.com/user-attachments/assets/4cdfb8e3-f0a8-42cd-a333-5deec17266cc)
@@ -199,8 +206,210 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Dễ bị mắc kẹt ở local optimum
           . Không đảm bảo tìm được solution
           . Chất lượng solution phụ thuộc nhiều vào heuristic
-     2.1.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm không có thông tin 
+     2.2.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm không có thông tin 
      ![Informed Search](https://github.com/user-attachments/assets/05bea791-c515-4709-ab8f-cd8aba78b2f7)
+     2.2.3 Nhận xét về hiệu suất các thuật toán
+       _ A* (A-star)
+         + Ưu điểm
+           . Tối ưu (luôn tìm được lời giải ngắn nhất nếu tồn tại)
+           . Hiệu quả với heuristic Manhattan Distance
+           . Thời gian chạy tốt trong hầu hết trường hợp
+          + Nhược điểm
+            . Tiêu tốn bộ nhớ do lưu trữ nhiều trạng thái
+            . Phức tạp khi kích thước puzzle tăng
+        _ UCS (Uniform Cost Search)
+          + Ưu điểm
+            . Tối ưu như A*
+            . Đơn giản hơn A*
+          + Nhược điểm
+            . Chậm hơn A* do không sử dụng heuristic
+            . Duyệt nhiều node không cần thiết
+        _ Greedy
+          + Ưu điểm
+            . Nhanh trong nhiều trường hợp
+            . Tập trung vào mục tiêu
+          + Nhược điểm
+            . Không đảm bảo tối ưu
+            . Dễ bị kẹt trong local optima
+
+2.3 Các thuật toán tìm kiếm nội bộ
+
+    2.3.1 Các thành phần chính của bài toán tìm kiếm và solution
+      * Thuật toán simple hill climbing
+
+          _ Các thành phần chính
+            + Hàm đánh giá (Heuristic Function)
+              . Sử dụng khoảng cách Manhattan để đánh giá trạng thái hiện tại
+              . manhattan_distance(state) tính tổng khoảng cách từ vị trí hiện tại của các ô đến vị trí đích
+            + Trạng thái hiện tại (Current State)
+              . Bắt đầu từ trạng thái ban đầu (start_state)
+              . Theo dõi trạng thái hiện tại trong quá trình tìm kiếm
+            + Hàng xóm (Neighbors)
+              . get_neighbors(state) tạo ra các trạng thái kế tiếp bằng cách di chuyển ô trống
+              . Mỗi trạng thái có tối đa 4 hàng xóm (lên, xuống, trái, phải)
+            + Lựa chọn bước đi
+              . So sánh giá trị heuristic của các hàng xóm
+              . Chọn hàng xóm có giá trị heuristic tốt nhất (nhỏ nhất)
+            + Xử lý local optimum:
+              . Bộ đếm stuck_count để phát hiện khi bị kẹt
+              . Khi bị kẹt (>5 lần), thực hiện bước đi ngẫu nhiên có kiểm soát
+              . Cho phép di chuyển ngang (cùng giá trị heuristic) để thoát local optimum
+          _ Solution từ Simple hill climbing
+            + Ưu điểm
+              . Thuật toán chỉ cần so sánh các trạng thái lân cận
+              . Không cần lưu trữ nhiều trạng thái như BFS/DFS
+              . Chỉ lưu trữ đường đi hiện tại
+              . Không cần hàng đợi hoặc ngăn xếp như các thuật toán khác
+              . Với 8-puzzle 3x3, thường tìm được giải pháp khá nhanh
+            + Nhược điểm
+              . Khi gặp trạng thái mà mọi hàng xóm đều xấu hơn
+              . Có thể không tìm thấy giải pháp tối ưu
+              . Phụ thuộc vào trạng thái ban đầu
+              . Thời gian chạy thay đổi tùy vào trạng thái ban đầu
+              . Có thể cần nhiều lần thử để tìm ra giải pháp
+
+      * Thuật toán Steepest ascent hill climbing
+
+        _ Các thành phần chính 
+          + Hàm Heuristic (Manhattan Distance)
+            . Đánh giá "độ tốt" của một trạng thái
+            . Tính tổng khoảng cách từ vị trí hiện tại của các ô đến vị trí đích của chúng
+          + Trạng thái hiện tại (Current State)
+            . Khởi tạo: Bắt đầu từ start_state
+            . Cập nhật: Liên tục thay đổi khi tìm được trạng thái tốt hơn
+          + Hàng xóm (Neighbors)
+            . Di chuyển ô trống (0) lên/xuống/trái/phải (nếu hợp lệ)
+            . Mỗi trạng thái có tối đa 4 hàng xóm
+          + Lựa chọn bước đi (Steepest Ascent)
+            . Không chọn hàng xóm đầu tiên tốt hơn.
+            . Duyệt tất cả hàng xóm và chọn trạng thái tốt nhất (có manhattan_distance nhỏ nhất)
+          + Xử lý Local Optimum (Tối ưu cục bộ)
+            . Chọn ngẫu nhiên một hàng xóm để thoát khỏi bế tắc
+          + Giới hạn số lần thử (max_attempts)
+            . Nếu vượt quá max_attempts mà chưa tìm ra giải pháp → Dừng thuật toán
+        _ Solution từ Steepest ascent hill climbing
+          + Ưu điểm
+            . Luôn chọn bước đi tối ưu nhất trong các hàng xóm → Giảm số bước không cần thiết
+            . Nếu không tìm được trạng thái tốt hơn → Di chuyển ngẫu nhiên để tránh bị kẹt
+            . Chỉ lưu đường đi hiện tại, không cần hàng đợi/ngăn xếp như BFS/DFS
+          + Nhược điểm
+            . Nếu không có hàng xóm nào tốt hơn, thuật toán phải chọn ngẫu nhiên → Không đảm bảo tìm ra giải pháp
+            . Có thể tìm được giải pháp không phải ngắn nhất
+            . Nếu start_state xa goal_state, thuật toán có thể chạy lâu hơn
+
+      * Thuật toán Stochastic hill climbing
+        _ Các thành phần chính
+          + Hàm Heuristic (Manhattan Distance)
+            . Sử dụng manhattan_distance(state) để đánh giá chất lượng trạng thái
+            . Khoảng cách càng nhỏ → trạng thái càng tốt
+          + Lựa chọn hàng xóm theo xác suất
+            . Không chọn hàng xóm tốt nhất
+            . Gán xác suất chọn cho từng hàng xóm tốt hơn hoặc bằng
+          +  Cơ chế tính xác suất
+          + Chọn lựa ngẫu nhiên có trọng số
+          + Xử lý local optimum
+        _ Solution từ Stochastic hill climbing
+          + Ưu điểm
+            . Nhờ cơ chế chọn ngẫu nhiên có trọng số
+            . Vẫn ưu tiên các trạng thái tốt nhưng không cứng nhắc
+            . Có thể thử nghiệm nhiều hướng đi khác nhau
+            . Giảm khả năng bị kẹt vào cùng một đường đi
+            . Trạng thái chỉ tốt hơn một chút vẫn có cơ hội được chọn
+          + Nhược điểm
+            . Có thể mất nhiều bước hơn do chọn ngẫu nhiên
+            . Không chắc chắn tìm được giải pháp tối ưu
+            . Cách tính xác suất ảnh hưởng lớn đến hiệu quả
+            . Cần điều chỉnh hệ số (+0.1) cho phù hợp
+            . Các lần chạy khác nhau có thể cho kết quả khác nhau
+      * Thuật toán Simulated annealing
+        _ Các thành phần chính 
+          + Hàm đánh giá (Energy Function)
+            . Sử dụng manhattan_distance(state) làm hàm năng lượng
+            . Mục tiêu: Giảm thiểu giá trị này (tương tự như trong vật lý, hệ thống tiến tới trạng thái năng lượng thấp nhất)
+          + Tham số nhiệt độ
+            . Nhiệt độ ban đầu (initial_temp) thường chọn giá trị lớn (1000 trong code) để cho phép khám phá mạnh ban đầu
+            . Tỉ lệ làm mát (cooling_rate), giá trị 0.99 giảm nhiệt độ từ từ, temp *= cooling_rate sau mỗi lần lặp
+          + Cơ chế chấp nhận bước đi
+          + Tiêu chí dừng
+            . Tìm thấy trạng thái đích
+            . Đạt số lần lặp tối đa (max_iterations)
+            . Nhiệt độ giảm xuống quá thấp (temp < 0.1)
+        _ Solution từ Simulated annealing
+          + Ưu điểm 
+            . Khả năng thoát local optimum mạnh mẽ
+            . Cân bằng giữa exploration và exploitation
+            . Không phụ thuộc vào trạng thái ban đầu
+          + Nhược điểm
+            . Phụ thuộc vào tham số initial_temp quá thấp → thiếu khám phá, cooling_rate quá nhanh → hội tụ sớm
+            . Tốc độ chậm do phải tính toán xác suất và quản lý nhiệt độ
+            . Không đảm bảo tìm được giải pháp tối ưu
+      * Thuật toán Beam Search
+        _ Các thành phần chính
+          + Hàm đánh giá (Evaluation Function)
+            . Sử dụng manhattan_distance(state) để đánh giá chất lượng trạng thái
+            . Mục tiêu là tìm trạng thái có giá trị heuristic nhỏ nhất
+          + Beam Width (Bề rộng chùm)
+            . Tham số beam_width (mặc định là 2) quyết định: số lượng trạng thái tốt nhất được giữ lại sau mỗi bước và cân bằng giữa hiệu suất và chất lượng giải pháp
+          + Cơ chế tìm kiếm theo tần
+          + Quản lý các trạng thái đã thăm
+            . Sử dụng tập hợp visited để tránh lặp lại trạng thái
+        _ Solution từ Beam Search
+          + Ưu điểm
+            . Cân bằng giữa BFS và Greedy Search
+            . Không chỉ chọn 1 trạng thái tốt nhất như Greedy (giảm rủi ro bỏ sót giải pháp
+            . Kiểm soát được không gian tìm kiếm
+            . Tránh lặp trạng thái
+          + Nhược điểm
+            . Không đảm bảo tìm ra giải pháp
+            . Phụ thuộc vào hàm heurist
+            . Không có cơ chế thoát local optimum
+      * Thuật toán Genetic
+        _ Các thành phần chính
+          + Biểu diễn cá thể (Individual Representation)
+            . Mỗi cá thể là một chuỗi các trạng thái (path) từ start state
+          + Hàm đánh giá (Fitness Function)
+            . Sử dụng khoảng cách Manhattan làm độ đo
+            . Giá trị càng thấp → cá thể càng tốt
+          + Khởi tạo quần thể (Initial Population)
+            . Mỗi cá thể được tạo bằng cách thực hiện các bước di chuyển ngẫu nhiên từ start state
+          + Chọn lọc (Selection)
+            . Chọn ngẫu nhiên 3 cá thể → giữ lại cá thể tốt nhất
+          + Lai ghép (Crossover)
+            . Ghép 2 path từ 2 cha mẹ tại điểm ngẫu nhiên
+          + Đột biến (Mutation)
+            . Thay đổi ngẫu nhiên một trạng thái trong path
+            . Đảm bảo tính hợp lệ của path sau đột biến
+          + Tham số thuật toán
+            . population_size: Số lượng cá thể (50)
+            . generations: Số thế hệ (1000)
+            . mutation_rate: Xác suất đột biến (0.2)
+        _ Phân tích solution
+          + Ưu điểm
+            . Không cần heuristic phức tạp
+            . Khám phá không gian giải pháp đa dạng nhờ cơ chế đột biến và lai ghép, tránh được local optimum tốt hơn các phương pháp leo đồi
+            . Linh hoạt trong biểu diễn bài toán có thể dễ dàng áp dụng cho các phiên bản puzzle khác nhau
+          +Nhược điểm
+            . Tốn chi phí tính toán
+            . Cần duy trì và đánh giá cả quần thể
+            . Không đảm bảo tìm ra giải pháp tối ưu
+            . Phụ thuộc vào may mắn trong quá trình tiến hóa
+            . Có thể hội tụ sớm vào giải pháp dưới tối ưu
+            .  Điều chỉnh tham số phức tạp
+            . Cần tinh chỉnh population_size, mutation_rate cho từng bài toán
+            
+
+
+
+
+
+
+
+
+        
+
+
+        
+
 
 
 
