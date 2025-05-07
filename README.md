@@ -114,6 +114,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
     2.1.1 Các thành phần chính của bài toán tìm kiếm và solution
 
     * Thuật toán A*
+    ![A*](https://github.com/user-attachments/assets/4cdfb8e3-f0a8-42cd-a333-5deec17266cc)
+
 
       _ Các thành phần chính
         + Hàm heuristic (Manhattan Distance)
@@ -138,6 +140,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Các ô được highlight khi di chuyển
           
     * Thuật toán IDA*
+    ![IDA*](https://github.com/user-attachments/assets/70113acf-75cc-44ab-9466-45be8b16b6fe)
+
       _ Các thành phần chính
         + Hàm heuristic (Manhattan Distance)
           . Sử dụng khoảng cách Manhattan làm heuristic
@@ -169,6 +173,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Các ô được highlight khi di chuyển
 
     * Thuật toán Greedy Search
+    ![Greedy](https://github.com/user-attachments/assets/f23de7ea-24c6-465a-b365-e88b7faa0fae)
+
       _ Các thành phần chính
         + Hàm heuristic (Manhattan Distance)
           . Ước lượng chi phí từ trạng thái hiện tại đến trạng thái đích
