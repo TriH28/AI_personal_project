@@ -473,23 +473,147 @@ Báo cáo đồ án cá nhân (8-puzzles)
     2.3.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm nội bộ
     ![Complex Environment](https://github.com/user-attachments/assets/2ff080f6-a24d-477a-9ead-9de03e443df9)
 
+2.5 Các thuật toán tìm kiếm Constraint Satisfaction Problems (CSPs)
 
-
+    * Thuật toán Backtracking
     
+      _ Các thành phần chính
+        + Chuyển đổi trạng thái
+          . Mục đích: Chuyển từ biểu diễn ma trận 3x3 sang danh sách phẳng 9 phần tử
+          . Lợi ích: Dễ dàng thao tác với vị trí ô trống và hoán đổi giá trị
+        + Hàm đệ quy backtrack
+          . current_state: Trạng thái hiện tại (dạng list phẳng)
+          . path: Lịch sử các trạng thái đã đi qua
+          . visited: Tập hợp các trạng thái đã thăm
+          . depth: Độ sâu đệ quy (phòng tràn stack)
+        + Điều kiện dừng
+          . Kiểm tra đích: So sánh với trạng thái mục tiêu
+          . Giới hạn đệ quy: Tránh đệ quy quá sâu (có thể điều chỉnh)
+        + Thử các hướng di chuyển
+          . Tìm ô trống: Xác định vị trí hiện tại của số 0
+          . Tạo trạng thái mới: Hoán đổi ô trống với ô lân cận hợp lệ
+        + Quản lý visited states
+          . Tránh lặp: Sử dụng set visited để ghi nhớ các trạng thái đã xét
+          . Quay lui (backtrack): Gỡ bỏ trạng thái khỏi tập visited nếu không dẫn đến lời giải
+      _ Phân tích solution
+        +  Ưu điểm 
+          . Đơn giản và trực quan: Dễ hiểu và triển khai
+          . Đảm bảo tìm lời giải: Nếu tồn tại và trong giới hạn độ sâu
+          . Quản lý bộ nhớ tốt: Sử dụng set để tránh xét lại các trạng thái
+        + Nhược điểm
+          . Hiệu suất thấp: Độ phức tạp thời gian cao (O(b^d) với b là nhân tố nhánh, d là độ sâu)
+          . Giới hạn độ sâu: Có thể bỏ sót lời giải nếu nằm ngoài giới hạn depth
+          . Không tối ưu: Không đảm bảo tìm được đường đi ngắn nhất
+
+    * Thuật toán Backtracking With Forward Checking
+      _ Các thành phần chính
+        + Chuyển đổi trạng thái
+          . Mục đích: Chuyển trạng thái từ dạng ma trận (list[list]) sang tuple[tuple] để có thể lưu vào set (vì set chỉ chấp nhận kiểu dữ liệu hashable)
+          . Lợi ích: Giúp kiểm tra trạng thái đã thăm (visited) hiệu quả
+        + Hàm Heuristic (Manhattan Distance)
+          . Mục đích: Ước lượng khoảng cách từ trạng thái hiện tại đến trạng thái đích
+          . Cách tính: Tính tổng khoảng cách Manhattan của từng ô (trừ ô trống)
+          . Tác dụng: Giúp sắp xếp các bước đi tiềm năng theo thứ tự ưu tiên, tăng tốc độ tìm kiếm
+        + Hàm Backtrack đệ quy
+        ` . Tham số: current_state (trạng thái hiện tại), depth (độ sâu đệ quy)
+        + Điều kiện dừng
+          . Đạt đến max_depth (tránh stack overflow)
+          . Tìm thấy goal_state
+          . Trạng thái đã được thăm (visited)
+        + Forward Checking (Kiểm tra tiến)
+          . Mục đích: Kiểm tra các bước đi hợp lệ và loại bỏ những trạng thái đã thăm
+        + Quay lui (Backtracking)
+          . Thử từng bước đi (path.append)
+          . Nếu không tìm thấy lời giải (backtrack trả False), quay lui (path.pop)
+          . Xóa trạng thái khỏi visited để thử các nhánh khác
+      _ Phân tích solution
+        + Ưu điểm
+          . Forward Checking giúp loại bỏ sớm các trạng thái không khả thi
+          . Heuristic (Manhattan Distance) hướng dẫn tìm kiếm nhanh hơn
+          . max_depth giới hạn độ sâu đệ quy
+          . visited tránh xét lại các trạng thái đã thăm
+          . Tìm lời giải tối ưu (nếu heuristic đủ tốt)
+        + Nhược điểm
+          . Vẫn có độ phức tạp cao (O(b^d) trong trường hợp xấu nhất)
+          . Nếu manhattan_distance không đủ tốt, thuật toán có thể chậm
+          . Không đảm bảo tìm được lời giải ngắn nhất (vì không phải BFS)
+          
+      Thuật toán này cân bằng giữa tính đơn giản và hiệu suất, phù hợp cho các bài toán vừa và nhỏ.
+
+    * Thuật toán Min-Conflicts
+
+      _ Các thành phần chính
+        + Khởi tạo trạng thái và bản đồ vị trí mục tiêu
+          . current: Lưu trạng thái hiện tại (dạng list để có thể thay đổi)
+          . goal_positions: Bản đồ lưu vị trí đúng của từng số trong trạng thái đích (giúp tính toán xung đột nhanh)
+        + Vòng lặp chính (tối đa max_steps)
+          . Mục đích: Lặp tối đa max_steps lần để tìm lời giải
+          . Kiểm tra điều kiện dừng: Nếu trạng thái hiện tại khớp với goal, trả về kết quả
+        + Phát hiện xung đột (conflict detection)
+          . Mục đích: Tìm tất cả các ô có giá trị không nằm đúng vị trí mục tiêu
+          . Cách tính xung đột: Khoảng cách Manhattan từ vị trí hiện tại đến vị trí đúng
+          . Kết quả: Danh sách conflicts chứa các ô cần điều chỉnh
+        + Chọn ô có xung đột lớn nhất
+          . Logic: Ưu tiên sửa những ô có sai lệch lớn nhất so với vị trí đúng
+          . Nếu không có xung đột: Dừng vòng lặp (đã giải xong)
+        + Tìm bước di chuyển tối ưu (chỉ di chuyển ô trống)
+          . Mục đích: Tìm hướng di chuyển ô trống làm giảm nhiều xung đột nhất
+          . Với mỗi ô lân cận ô trống, thử hoán đổi
+          . Tính toán số xung đột trước/sau khi di chuyển
+          . Chọn bước di chuyển giảm xung đột nhiều nhất
+        + Áp dụng bước di chuyển tốt nhất
+          . Thực hiện di chuyển: Hoán đổi ô trống với ô lân cận được chọn
+          . Trong 8-Puzzle, chỉ ô trống có thể di chuyển → thuật toán phải điều chỉnh để phù hợp
+      _ Phân tích Solution
+        + Ưu điểm
+          . Tập trung vào xung đột lớn nhất: Giúp giảm nhanh sai lệch so với mục tiêu
+          . Không cần backtracking: Tiết kiệm bộ nhớ so với các thuật toán quay lui
+          . Phù hợp với bài toán ràng buộc: Đặc biệt hiệu quả với CSP (Constraint Satisfaction Problems)
+        + Nhược điểm
+          . Không đảm bảo tìm được lời giải: Có thể mắc kẹt ở local optima
+          . Hiệu suất phụ thuộc vào heuristic: Nếu chọn sai ô để điều chỉnh, thuật toán có thể chậm
+          . Không tối ưu cho 8-Puzzle: Do chỉ di chuyển được ô trống, khả năng giảm xung đột bị hạn chế
+        + Giải thích lý do không giải được bài toán 8 puzzles
+          . Không gian trạng thái bị ràng buộc chặt
+          . Chỉ được phép di chuyển ô trống, không phải gán giá trị tùy ý
+          . Việc chuyển từ trạng thái này sang trạng thái khác bị giới hạn nghiêm ngặt bởi hành động hợp lệ
+          . Hàm đánh giá quá "mù mờ" và dễ kẹt
+          . Tổng khoảng cách Manhattan làm hàm xung đột — điều này giống với heuristic của A*, nhưng Min-Conflicts không đảm bảo thoát khỏi local minimum nếu không có random walk hay cơ chế nhảy thoát (như simulated annealing)
+
+2.6 Các thuật toán tìm kiếm Reinforcement Learning
+
+    * Thuật toán Q-learning
+      _ Các thành phần chính
+        + Lớp QLearningSolver
+        + Chuyển đổi trạng thái
+          . Mục đích: Chuyển trạng thái dạng tuple/matrix thành string để dùng làm key trong Q-table
+        + Chọn hành động (Epsilon-Greedy Policy)
+          . Epsilon (ε): Xác suất chọn hành động ngẫu nhiên (khám phá)
+          . 1-ε: Chọn hành động có Q-value cao nhất (khai thác)
+        + Cập nhật Q-value
+          . Công thức: Q(s,a) ← Q(s,a) + α * [r + γ * max(Q(s',a')) - Q(s,a)]
+        + Hàm chính q_learning
+          . Gồm 2 giai đoạn: Huấn luyện (training) và Suy luận (inference)
+      _ Phân tích solution
+        + Ưu điểm
+          . Không cần biết model môi trường (model-free)
+          . Có thể học qua kinh nghiệm (trial-and-error)
+          . Phù hợp với không gian trạng thái lớn (nếu dùng kèm hàm xấp xỉ)
+        + Nhược điểm
+          . Đòi hỏi nhiều episode huấn luyện để Q-table hội tụ
+          . Khó áp dụng trực tiếp cho 8-Puzzle do số trạng thái quá lớn (9! = 362880)
+          . Không đảm bảo tìm được lời giải tối ưu nếu không điều chỉnh hyperparameters (α, γ, ε) phù hợp
+        + Giải thích lý do không giải được bài toán 8 puzzles
+          . Không gian trạng thái quá lớn: có tới 9! = 362,880 trạng thái hợp
+          . Không khám phá đủ trạng thái
+          . Không cập nhật đủ Q-value
+          . Bị kẹt trong các quỹ đạo không hiệu quả
+          
+      
 
 
 
 
-
-
-
-
-        
-
-
-        
-
-
-
-
+          
+    
 
