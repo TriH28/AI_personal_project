@@ -413,6 +413,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
 
      2.3.1 Các thành phần chính của bài toán tìm kiếm và solution
        * Thuật toán Nondeterministic Search
+       ![Nondeterministic Search](https://github.com/user-attachments/assets/a53fb3f8-154b-434b-ba95-8a5f258f651e)
+       
          _ Các thành phần chính
            + Hàm heuristic kỳ vọng (expected_heuristic)
              . Mục đích: Điều chỉnh heuristic thông thường để tính đến yếu tố không xác định
@@ -437,6 +439,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Phiên bản đơn giản hóa: Chỉ xét trạng thái mong muốn, không mô hình hóa đầy đủ các kết quả có thể có
               . Heuristic đơn giản: Chỉ nhân hệ số cố định, chưa phản ánh chính xác xác suất các trạng thái khác nhau
         * Thuật toán Partial Observation
+        ![Partial Observation](https://github.com/user-attachments/assets/17d178e2-ae45-4161-82c8-ceacf257322d)
+
           _ Các thành phần chính
             + Khởi tạo quan sát một phần
               . Mục đích: Tạo trạng thái quan sát ban đầu với một số ô bị ẩn
@@ -465,7 +469,9 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Thiếu cơ chế xử lý khi belief states rỗng: Không xử lý trường hợp không có trạng thái nào phù hợp
               
             Giải pháp Partial Observation Search cung cấp cách tiếp cận hợp lý cho bài toán 8-puzzle với thông tin không đầy đủ. Phiên bản hiện tại là một khung cơ bản tốt
-
+            
+    2.3.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm nội bộ
+    ![Complex Environment](https://github.com/user-attachments/assets/2ff080f6-a24d-477a-9ead-9de03e443df9)
 
 
 
