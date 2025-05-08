@@ -236,6 +236,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
 
     2.3.1 Các thành phần chính của bài toán tìm kiếm và solution
       * Thuật toán simple hill climbing
+        ![Simple Hill Climbing](https://github.com/user-attachments/assets/d36e9cce-164c-454a-b450-7de1f3c1790f)
 
           _ Các thành phần chính
             + Hàm đánh giá (Heuristic Function)
@@ -269,8 +270,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Có thể cần nhiều lần thử để tìm ra giải pháp
 
       * Thuật toán Steepest ascent hill climbing
-
-        _ Các thành phần chính 
+        ![Steepest Ascen Hill Climbing](https://github.com/user-attachments/assets/dce830da-ab74-4398-8499-be9c442ec1d5) 
+        _ Các thành phần chính
           + Hàm Heuristic (Manhattan Distance)
             . Đánh giá "độ tốt" của một trạng thái
             . Tính tổng khoảng cách từ vị trí hiện tại của các ô đến vị trí đích của chúng
@@ -298,6 +299,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Nếu start_state xa goal_state, thuật toán có thể chạy lâu hơn
 
       * Thuật toán Stochastic hill climbing
+      ![Stochastic Hill](https://github.com/user-attachments/assets/5f3e58d1-c941-43d7-a10f-14e0cb6fd485)
+
         _ Các thành phần chính
           + Hàm Heuristic (Manhattan Distance)
             . Sử dụng manhattan_distance(state) để đánh giá chất lượng trạng thái
@@ -322,6 +325,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Cần điều chỉnh hệ số (+0.1) cho phù hợp
             . Các lần chạy khác nhau có thể cho kết quả khác nhau
       * Thuật toán Simulated annealing
+      ![Simulated Annealing](https://github.com/user-attachments/assets/86f53cf9-7952-4254-95ff-7f03526faf84)
+
         _ Các thành phần chính 
           + Hàm đánh giá (Energy Function)
             . Sử dụng manhattan_distance(state) làm hàm năng lượng
@@ -344,6 +349,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Tốc độ chậm do phải tính toán xác suất và quản lý nhiệt độ
             . Không đảm bảo tìm được giải pháp tối ưu
       * Thuật toán Beam Search
+      ![Beam](https://github.com/user-attachments/assets/a2a6e367-44d1-40ed-aa60-01699f8fc212)
+
         _ Các thành phần chính
           + Hàm đánh giá (Evaluation Function)
             . Sử dụng manhattan_distance(state) để đánh giá chất lượng trạng thái
@@ -364,6 +371,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Phụ thuộc vào hàm heurist
             . Không có cơ chế thoát local optimum
       * Thuật toán Genetic
+      ![Genetic](https://github.com/user-attachments/assets/66a437e8-8c68-4b06-bc3c-d75c232f565a)
+
         _ Các thành phần chính
           + Biểu diễn cá thể (Individual Representation)
             . Mỗi cá thể là một chuỗi các trạng thái (path) từ start state
@@ -396,7 +405,71 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Có thể hội tụ sớm vào giải pháp dưới tối ưu
             .  Điều chỉnh tham số phức tạp
             . Cần tinh chỉnh population_size, mutation_rate cho từng bài toán
-            
+    2.3.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm nội bộ
+    ![Local Search](https://github.com/user-attachments/assets/1ee15406-a9bb-42fd-ba0e-b54908494bdd)
+
+
+2.4 Các thuật toán tìm kiếm trong môi trường phức tạp
+
+     2.3.1 Các thành phần chính của bài toán tìm kiếm và solution
+       * Thuật toán Nondeterministic Search
+         _ Các thành phần chính
+           + Hàm heuristic kỳ vọng (expected_heuristic)
+             . Mục đích: Điều chỉnh heuristic thông thường để tính đến yếu tố không xác định
+             . Cách tính: Nhân khoảng cách Manhattan với hệ số 1/xác_suất_thành_công
+             . Ý nghĩa: Khi xác suất thành công thấp, heuristic giá trị cao hơn để phản ánh độ khó
+            + Cấu trúc dữ liệu và khởi tạo
+              . Open set: Hàng đợi ưu tiên lưu (f_score, cost, state, path)
+              . Visited set: Tập hợp các trạng thái đã xét để tránh lặp
+            + Vòng lặp chính
+              . Lấy trạng thái có f_score nhỏ nhất từ open set
+              . Kiểm tra điều kiện dừng khi gặp goal state
+              . Bỏ qua các trạng thái đã xét
+            + Xử lý hành động không xác định
+              . Tìm các trạng thái kề có thể có
+              . Trong phiên bản đơn giản này, chỉ xét trạng thái mong muốn (không xét các trạng thái lỗi)
+          _ Phân tích solution
+            + Ưu điểm
+              . Kế thừa ưu điểm của A*: Đảm bảo tìm được lời giải tối ưu nếu tồn tại
+              . Xử lý không xác định: Heuristic điều chỉnh phản ánh độ không chắc chắn
+              . Hiệu quả: Vẫn duy trì được tính hiệu quả của A* trong môi trường không xác định
+            + Nhược điểm
+              . Phiên bản đơn giản hóa: Chỉ xét trạng thái mong muốn, không mô hình hóa đầy đủ các kết quả có thể có
+              . Heuristic đơn giản: Chỉ nhân hệ số cố định, chưa phản ánh chính xác xác suất các trạng thái khác nhau
+        * Thuật toán Partial Observation
+          _ Các thành phần chính
+            + Khởi tạo quan sát một phần
+              . Mục đích: Tạo trạng thái quan sát ban đầu với một số ô bị ẩn
+              . Cách hoạt động: Chọn ngẫu nhiên num_hidden ô để ẩn, chỉ giữ lại giá trị các ô hiển thị
+            + Belief States (Trạng thái niềm tin)
+              . Định nghĩa: Tập hợp tất cả các trạng thái có thể phù hợp với quan sát hiện tại
+              . Trong triển khai đơn giản: Chỉ sử dụng trạng thái thực (để minh họa)
+              . Triển khai đầy đủ: Cần sinh tất cả trạng thái có thể khớp với các ô đã quan sát
+            + Vòng lặp tìm kiếm chính
+              . Vòng lặp tìm kiếm chính
+              . Mỗi bước: Chọn hành động, thực hiện di chuyển, cập nhật thông tin
+            + Cập nhật quan sát
+              . Quy tắc: Ô trống (0) luôn được tiết lộ khi nó di chuyển vào vị trí bị ẩn
+              . Mục đích: Giảm dần số ô bị ẩn khi puzzle được giải
+            + Cập nhật Belief States
+              . Chức năng: Lọc các trạng thái trong belief states để chỉ giữ lại những cái phù hợp với quan sát mới
+              . Triển khai đầy đủ: Cần kiểm tra tính nhất quán của mỗi trạng thái với observation
+          _ Phân tích solution
+            + Ưu điểm
+              . Mô phỏng quan sát không đầy đủ: Giải quyết bài toán thực tế khi không thấy toàn bộ trạng thái
+              . Tiếp cận Belief State: Phù hợp với lý thuyết POMDP (Partially Observable MDP)
+              . Cơ chế tiết lộ thông tin: Tự động phát hiện ô trống khi nó di chuyển vào vị trí ẩn
+            + Nhược điểm
+              . Triển khai đơn giản hóa: Chưa thực sự quản lý belief states đầy đủ
+              . Chiến lược chọn hành động ngẫu nhiên: Không tối ưu, có thể dẫn đến hiệu suất thấp
+              . Thiếu cơ chế xử lý khi belief states rỗng: Không xử lý trường hợp không có trạng thái nào phù hợp
+              
+            Giải pháp Partial Observation Search cung cấp cách tiếp cận hợp lý cho bài toán 8-puzzle với thông tin không đầy đủ. Phiên bản hiện tại là một khung cơ bản tốt
+
+
+
+
+    
 
 
 
