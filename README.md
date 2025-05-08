@@ -2,6 +2,29 @@ Báo cáo đồ án cá nhân (8-puzzles)
 
 1.Mục tiêu
 
+    Xây dựng một chương trình giải trò chơi 8-Puzzle (trò chơi xếp số) bằng nhiều thuật toán AI khác nhau, đồng thời cung cấp giao diện đồ họa trực quan để người dùng có thể theo dõi quá trình giải.
+    _ Triển khai đa dạng thuật toán AI:
+      + Tìm kiếm không gian trạng thái: BFS, DFS, IDDFS, UCS, A, IDA, Beam Search
+      + Tìm kiếm heuristic: Greedy, Hill Climbing (Simple, Steepest Ascent, Stochastic), Simulated Annealing
+      + Thuật toán tối ưu: Genetic Algorithm, Min-Conflicts
+      + Giải quyết ràng buộc: Backtracking, Backtracking với Forward Checking
+      + Môi trường không xác định: Nondeterministic Search, Partial Observation Search
+      + Học tăng cường: Q-Learning
+    _ Giao diện đồ họa trực quan:
+      + Hiển thị trạng thái hiện tại của bảng 8-Puzzle
+      + Cung cấp nút bấm để chọn thuật toán và xem kết quả
+      + Hiển thị thời gian thực thi của từng thuật toán
+      + Mô phỏng từng bước di chuyển của thuật toán với tốc độ có thể điều chỉnh
+    _ Đánh giá hiệu suất:
+      + So sánh thời gian thực thi giữa các thuật toán
+      + Đánh giá số bước di chuyển cần thiết để đạt đến trạng thái mục tiêu
+    _ Mở rộng tính năng:
+      + Hỗ trợ các biến thể của bài toán như môi trường không xác định hoặc quan sát một phần
+      + Tích hợp các kỹ thuật AI hiện đại như Q-Learning để giải quyết bài toán
+    _ Mục đích học tập:
+      + Giúp người dùng hiểu rõ cách hoạt động của từng thuật toán thông qua minh họa trực quan
+      + Cung cấp công cụ để so sánh ưu nhược điểm của các phương pháp AI khác nhau trong cùng một bài toán
+
 2.Nội dung
 
   2.1 Các thuật toán tìm kiếm không có thông tin (Uninformed Search)
@@ -22,7 +45,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Chức năng: Tạo ra các trạng thái kế tiếp từ trạng thái hiện tại
             + Vòng lặp chính
               . Chức năng: Lấy trạng thái từ hàng đợi, kiểm tra mục tiêu, thêm trạng thái lân cận vào hàng đợi
-          _ Solution từ BFS
+          _ Phân tích Solution
             + Đặc điểm của solution
               . Tính đầy đủ: BFS luôn tìm được lời giải nếu tồn tại
               . Tối ưu: Tìm được lời giải ngắn nhất (ít bước nhất)
@@ -46,7 +69,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Chức năng: Ngăn DFS đi quá sâu vào một nhánh vô ích
             + Hàm tìm trạng thái lân cận
               . Giống BFS: Sử dụng cùng hàm get_neighbors() hoặc logic tương tự
-          _ Solution từ DFS
+          _ Phân tích Solution
             + Đặc điểm Solution DFS
               . Không đảm bảo tối ưu: Solution có thể dài hơn nhiều so với solution ngắn nhất mà BFS tìm được
               . Phụ thuộc vào thứ tự duyệt: Thay đổi thứ tự duyệt các hướng (UP, DOWN, LEFT, RIGHT) sẽ cho solution khác nhau
@@ -64,7 +87,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Chức năng: Tránh xét lại các trạng thái đã duyệt
             + Hàm tính chi phí
               . Đặc điểm: Trong UCS cho 8-puzzle, mỗi bước di chuyển có chi phí bằng nhau (1)
-          _ Solution từ UCS
+          _ Phân tích Solution
             + Tối ưu
               . UCS luôn tìm ra lộ trình có tổng chi phí thấp nhất, tức là ít bước nhất nếu mỗi bước có cùng chi phí
             + Chính xác
@@ -88,7 +111,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Duyệt các trạng thái theo kiểu hậu duệ trước (depth-first) nhưng không vượt quá độ sâu cho phép
               . Trả về đường đi (solution) nếu tìm thấy trạng thái đích trong phạm vi độ sâu đó
               . Nếu không tìm thấy gì trong độ sâu đó → quay lại iddfs để tăng giới hạn và thử lại
-          _ Solution từ UCS
+          _ Phân tích Solution
             + Tìm kiếm toàn diện
               . IDDFS không bỏ sót trạng thái nào, nếu trạng thái đích tồn tại, chắc chắn sẽ tìm thấy
             + Bảo đảm tìm được đường đi ngắn nhất theo độ sâu
@@ -136,7 +159,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Tối ưu hiệu suất thuật toán
         + Hàm tìm kiếm lân cận (Neighbor Function)
           . Tạo ra các trạng thái kế tiếp bằng cách di chuyển ô trống
-      _ Solution từ A*
+      _ Phân tích Solution
         + Đặc điểm 
           . Là solution tối ưu (ít bước nhất) vì heuristic Manhattan distance là admissible
           . Số bước trong solution phụ thuộc vào độ phức tạp của trạng thái ban đầu
@@ -169,7 +192,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
         + Vòng lặp chính
           . Lặp lại quá trình tìm kiếm với bound mới
           . Dừng khi tìm thấy solution hoặc không tìm thấy (float('inf'))
-      _ Solution từ IDA*
+      _ Phân tích Solution
         + Đặc điểm 
           . Tối ưu: Giống A*, tìm đường đi ngắn nhất do sử dụng heuristic admissible
           . Tiết kiệm bộ nhớ: Chỉ lưu đường đi hiện tại thay vì toàn bộ không gian trạng thái
@@ -192,7 +215,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
         + Tập hợp các trạng thái đã xét (Visited Set)
           . Theo dõi các trạng thái đã được xử lý
           . Tránh xét lại các trạng thái trùng lặp
-      _ Solution từ Greedy Search
+      _ Phân tích Solution
 
         + Đặc điểm 
           . Không đảm bảo tối ưu: Có thể không tìm được đường đi ngắn nhất
@@ -255,7 +278,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Bộ đếm stuck_count để phát hiện khi bị kẹt
               . Khi bị kẹt (>5 lần), thực hiện bước đi ngẫu nhiên có kiểm soát
               . Cho phép di chuyển ngang (cùng giá trị heuristic) để thoát local optimum
-          _ Solution từ Simple hill climbing
+          _ Phân tích Solution
             + Ưu điểm
               . Thuật toán chỉ cần so sánh các trạng thái lân cận
               . Không cần lưu trữ nhiều trạng thái như BFS/DFS
@@ -288,7 +311,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Chọn ngẫu nhiên một hàng xóm để thoát khỏi bế tắc
           + Giới hạn số lần thử (max_attempts)
             . Nếu vượt quá max_attempts mà chưa tìm ra giải pháp → Dừng thuật toán
-        _ Solution từ Steepest ascent hill climbing
+        _ Phân tích Solution
           + Ưu điểm
             . Luôn chọn bước đi tối ưu nhất trong các hàng xóm → Giảm số bước không cần thiết
             . Nếu không tìm được trạng thái tốt hơn → Di chuyển ngẫu nhiên để tránh bị kẹt
@@ -311,7 +334,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
           +  Cơ chế tính xác suất
           + Chọn lựa ngẫu nhiên có trọng số
           + Xử lý local optimum
-        _ Solution từ Stochastic hill climbing
+        _ Phân tích Solution
           + Ưu điểm
             . Nhờ cơ chế chọn ngẫu nhiên có trọng số
             . Vẫn ưu tiên các trạng thái tốt nhưng không cứng nhắc
@@ -339,7 +362,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Tìm thấy trạng thái đích
             . Đạt số lần lặp tối đa (max_iterations)
             . Nhiệt độ giảm xuống quá thấp (temp < 0.1)
-        _ Solution từ Simulated annealing
+        _ Phân tích Solution
           + Ưu điểm 
             . Khả năng thoát local optimum mạnh mẽ
             . Cân bằng giữa exploration và exploitation
@@ -360,7 +383,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
           + Cơ chế tìm kiếm theo tần
           + Quản lý các trạng thái đã thăm
             . Sử dụng tập hợp visited để tránh lặp lại trạng thái
-        _ Solution từ Beam Search
+        _ Phân tích Solution
           + Ưu điểm
             . Cân bằng giữa BFS và Greedy Search
             . Không chỉ chọn 1 trạng thái tốt nhất như Greedy (giảm rủi ro bỏ sót giải pháp
@@ -411,7 +434,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
 
 2.4 Các thuật toán tìm kiếm trong môi trường phức tạp
 
-     2.3.1 Các thành phần chính của bài toán tìm kiếm và solution
+     2.4.1 Các thành phần chính của bài toán tìm kiếm và solution
        * Thuật toán Nondeterministic Search
        ![Nondeterministic Search](https://github.com/user-attachments/assets/a53fb3f8-154b-434b-ba95-8a5f258f651e)
        
@@ -470,13 +493,14 @@ Báo cáo đồ án cá nhân (8-puzzles)
               
             Giải pháp Partial Observation Search cung cấp cách tiếp cận hợp lý cho bài toán 8-puzzle với thông tin không đầy đủ. Phiên bản hiện tại là một khung cơ bản tốt
             
-    2.3.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm nội bộ
+    2.4.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm nội bộ
     ![Complex Environment](https://github.com/user-attachments/assets/2ff080f6-a24d-477a-9ead-9de03e443df9)
 
 2.5 Các thuật toán tìm kiếm Constraint Satisfaction Problems (CSPs)
 
     * Thuật toán Backtracking
-    
+    ![Backtracking](https://github.com/user-attachments/assets/f2666ba9-44e0-4de9-b6ee-0c57360c763b)
+
       _ Các thành phần chính
         + Chuyển đổi trạng thái
           . Mục đích: Chuyển từ biểu diễn ma trận 3x3 sang danh sách phẳng 9 phần tử
@@ -506,7 +530,9 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Không tối ưu: Không đảm bảo tìm được đường đi ngắn nhất
 
     * Thuật toán Backtracking With Forward Checking
+    ![ Backtracking With Forward Checking](https://github.com/user-attachments/assets/285afed6-b034-4e72-afd5-16b57c692bef)
       _ Các thành phần chính
+
         + Chuyển đổi trạng thái
           . Mục đích: Chuyển trạng thái từ dạng ma trận (list[list]) sang tuple[tuple] để có thể lưu vào set (vì set chỉ chấp nhận kiểu dữ liệu hashable)
           . Lợi ích: Giúp kiểm tra trạng thái đã thăm (visited) hiệu quả
@@ -579,6 +605,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Việc chuyển từ trạng thái này sang trạng thái khác bị giới hạn nghiêm ngặt bởi hành động hợp lệ
           . Hàm đánh giá quá "mù mờ" và dễ kẹt
           . Tổng khoảng cách Manhattan làm hàm xung đột — điều này giống với heuristic của A*, nhưng Min-Conflicts không đảm bảo thoát khỏi local minimum nếu không có random walk hay cơ chế nhảy thoát (như simulated annealing)
+    2.5.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán Constraint Satisfaction Problems
+    ![CSPs](https://github.com/user-attachments/assets/f84afaa6-a56f-4f80-91ba-b2c38df55e7d)
 
 2.6 Các thuật toán tìm kiếm Reinforcement Learning
 
@@ -608,12 +636,3 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Không khám phá đủ trạng thái
           . Không cập nhật đủ Q-value
           . Bị kẹt trong các quỹ đạo không hiệu quả
-          
-      
-
-
-
-
-          
-    
-
