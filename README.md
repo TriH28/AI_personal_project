@@ -33,7 +33,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
     2.1.1 Các thành phần chính của bài toán tìm kiếm và solution
    
         * Thuật toán BFS  (Breadth-First Search)
-         ![BFS](https://github.com/user-attachments/assets/b2012eec-0dc5-4a25-bf56-e44b4e0a55c9)
+![BFS](https://github.com/user-attachments/assets/b2012eec-0dc5-4a25-bf56-e44b4e0a55c9)
 
           _ Các thành phần chính 
             + Hàng đợi (Queue)
@@ -56,7 +56,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
             + Đánh giá hiệu suất
               . Thời gian thực thi: Được đo và hiển thị trên giao diện
         * Thuật toán DFS (Depth-First Search)
-        ![DFS](https://github.com/user-attachments/assets/00621bd7-e316-4bed-8b48-da65dea5d590)
+ ![DFS](https://github.com/user-attachments/assets/00621bd7-e316-4bed-8b48-da65dea5d590)
 
           _ Các thành phần chính 
             + Ngăn xếp (Stack)
@@ -77,7 +77,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
             + Cách biểu diễn solution trong code
               . Cách lưu trữ dùng stack = [(start_state, [start_state], 0)]  
         * Thuật toán UCS (Uniform Cost Search)
-        ![UCS](https://github.com/user-attachments/assets/d5990234-7189-4aae-b3c3-696ac2e479d4)
+![UCS](https://github.com/user-attachments/assets/d5990234-7189-4aae-b3c3-696ac2e479d4)
 
           _ Các thành phần chính 
             + Hàng đợi ưu tiên (Priority Queue)
@@ -97,7 +97,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Với mỗi trạng thái mới sinh ra, thuật toán lưu lại trạng thái cha để có thể truy vết lại đường đi sau khi tìm thấy goal_state
               . Khi đạt đến trạng thái đích, thuật toán lần ngược từ goal về start để tái tạo lại chuỗi bước đi hoàn chỉnh — đó chính là solution
         * Thuật toán IDDFS (Iterative Deepening Depth-First Search)
-        ![IDDFS](https://github.com/user-attachments/assets/d221a78a-f1c7-44c0-a056-1d91e14961b0)
+![IDDFS](https://github.com/user-attachments/assets/d221a78a-f1c7-44c0-a056-1d91e14961b0)
 
           _ Các thành phần chính 
             + Hàm chính: iddfs(start, goal)
@@ -122,7 +122,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Có thể duyệt lại cùng một nút nhiều lần trong các độ sâu khác nhau (trade-off giữa thời gian và bộ nhớ)
       2.1.2 Hình ảnh gif so sánh các thuật toán trong nhóm thuật toán tìm kiếm không có thông tin 
       
-      ![Uninformed Search](https://github.com/user-attachments/assets/f2f01427-114f-4133-915f-2de905267f40)
+![Uninformed Search](https://github.com/user-attachments/assets/f2f01427-114f-4133-915f-2de905267f40)
       
       2.1.3 Nhận xét về hiệu suất các thuật toán
         _ BFS
@@ -144,7 +144,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
     2.2.1 Các thành phần chính của bài toán tìm kiếm và solution
 
     * Thuật toán A*
-    ![A*](https://github.com/user-attachments/assets/4cdfb8e3-f0a8-42cd-a333-5deec17266cc)
+![A*](https://github.com/user-attachments/assets/4cdfb8e3-f0a8-42cd-a333-5deec17266cc)
 
 
       _ Các thành phần chính
@@ -170,7 +170,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Các ô được highlight khi di chuyển
           
     * Thuật toán IDA*
-    ![IDA*](https://github.com/user-attachments/assets/70113acf-75cc-44ab-9466-45be8b16b6fe)
+ ![IDA*](https://github.com/user-attachments/assets/70113acf-75cc-44ab-9466-45be8b16b6fe)
 
       _ Các thành phần chính
         + Hàm heuristic (Manhattan Distance)
@@ -203,7 +203,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Các ô được highlight khi di chuyển
 
     * Thuật toán Greedy Search
-    ![Greedy](https://github.com/user-attachments/assets/f23de7ea-24c6-465a-b365-e88b7faa0fae)
+![Greedy](https://github.com/user-attachments/assets/f23de7ea-24c6-465a-b365-e88b7faa0fae)
 
       _ Các thành phần chính
         + Hàm heuristic (Manhattan Distance)
@@ -230,8 +230,9 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Không đảm bảo tìm được solution
           . Chất lượng solution phụ thuộc nhiều vào heuristic
      2.2.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm không có thông tin 
-     ![Informed Search](https://github.com/user-attachments/assets/05bea791-c515-4709-ab8f-cd8aba78b2f7)
-     2.2.3 Nhận xét về hiệu suất các thuật toán
+![Informed Search](https://github.com/user-attachments/assets/05bea791-c515-4709-ab8f-cd8aba78b2f7)
+
+         2.2.3 Nhận xét về hiệu suất các thuật toán
        _ A* (A-star)
          + Ưu điểm
            . Tối ưu (luôn tìm được lời giải ngắn nhất nếu tồn tại)
@@ -259,7 +260,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
 
     2.3.1 Các thành phần chính của bài toán tìm kiếm và solution
       * Thuật toán simple hill climbing
-        ![Simple Hill Climbing](https://github.com/user-attachments/assets/d36e9cce-164c-454a-b450-7de1f3c1790f)
+![Simple Hill Climbing](https://github.com/user-attachments/assets/d36e9cce-164c-454a-b450-7de1f3c1790f)
 
           _ Các thành phần chính
             + Hàm đánh giá (Heuristic Function)
@@ -293,7 +294,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Có thể cần nhiều lần thử để tìm ra giải pháp
 
       * Thuật toán Steepest ascent hill climbing
-        ![Steepest Ascen Hill Climbing](https://github.com/user-attachments/assets/dce830da-ab74-4398-8499-be9c442ec1d5) 
+![Steepest Ascen Hill Climbing](https://github.com/user-attachments/assets/dce830da-ab74-4398-8499-be9c442ec1d5) 
+
         _ Các thành phần chính
           + Hàm Heuristic (Manhattan Distance)
             . Đánh giá "độ tốt" của một trạng thái
@@ -322,7 +324,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Nếu start_state xa goal_state, thuật toán có thể chạy lâu hơn
 
       * Thuật toán Stochastic hill climbing
-      ![Stochastic Hill](https://github.com/user-attachments/assets/5f3e58d1-c941-43d7-a10f-14e0cb6fd485)
+![Stochastic Hill](https://github.com/user-attachments/assets/5f3e58d1-c941-43d7-a10f-14e0cb6fd485)
 
         _ Các thành phần chính
           + Hàm Heuristic (Manhattan Distance)
@@ -348,7 +350,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Cần điều chỉnh hệ số (+0.1) cho phù hợp
             . Các lần chạy khác nhau có thể cho kết quả khác nhau
       * Thuật toán Simulated annealing
-      ![Simulated Annealing](https://github.com/user-attachments/assets/86f53cf9-7952-4254-95ff-7f03526faf84)
+![Simulated Annealing](https://github.com/user-attachments/assets/86f53cf9-7952-4254-95ff-7f03526faf84)
 
         _ Các thành phần chính 
           + Hàm đánh giá (Energy Function)
@@ -372,7 +374,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Tốc độ chậm do phải tính toán xác suất và quản lý nhiệt độ
             . Không đảm bảo tìm được giải pháp tối ưu
       * Thuật toán Beam Search
-      ![Beam](https://github.com/user-attachments/assets/a2a6e367-44d1-40ed-aa60-01699f8fc212)
+ ![Beam](https://github.com/user-attachments/assets/a2a6e367-44d1-40ed-aa60-01699f8fc212)
 
         _ Các thành phần chính
           + Hàm đánh giá (Evaluation Function)
@@ -394,7 +396,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
             . Phụ thuộc vào hàm heurist
             . Không có cơ chế thoát local optimum
       * Thuật toán Genetic
-      ![Genetic](https://github.com/user-attachments/assets/66a437e8-8c68-4b06-bc3c-d75c232f565a)
+![Genetic](https://github.com/user-attachments/assets/66a437e8-8c68-4b06-bc3c-d75c232f565a)
 
         _ Các thành phần chính
           + Biểu diễn cá thể (Individual Representation)
@@ -429,14 +431,14 @@ Báo cáo đồ án cá nhân (8-puzzles)
             .  Điều chỉnh tham số phức tạp
             . Cần tinh chỉnh population_size, mutation_rate cho từng bài toán
     2.3.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm nội bộ
-    ![Local Search](https://github.com/user-attachments/assets/1ee15406-a9bb-42fd-ba0e-b54908494bdd)
+ ![Local Search](https://github.com/user-attachments/assets/1ee15406-a9bb-42fd-ba0e-b54908494bdd)
 
 
 2.4 Các thuật toán tìm kiếm trong môi trường phức tạp
 
      2.4.1 Các thành phần chính của bài toán tìm kiếm và solution
        * Thuật toán Nondeterministic Search
-       ![Nondeterministic Search](https://github.com/user-attachments/assets/a53fb3f8-154b-434b-ba95-8a5f258f651e)
+![Nondeterministic Search](https://github.com/user-attachments/assets/a53fb3f8-154b-434b-ba95-8a5f258f651e)
        
          _ Các thành phần chính
            + Hàm heuristic kỳ vọng (expected_heuristic)
@@ -462,7 +464,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
               . Phiên bản đơn giản hóa: Chỉ xét trạng thái mong muốn, không mô hình hóa đầy đủ các kết quả có thể có
               . Heuristic đơn giản: Chỉ nhân hệ số cố định, chưa phản ánh chính xác xác suất các trạng thái khác nhau
         * Thuật toán Partial Observation
-        ![Partial Observation](https://github.com/user-attachments/assets/17d178e2-ae45-4161-82c8-ceacf257322d)
+![Partial Observation](https://github.com/user-attachments/assets/17d178e2-ae45-4161-82c8-ceacf257322d)
 
           _ Các thành phần chính
             + Khởi tạo quan sát một phần
@@ -494,12 +496,12 @@ Báo cáo đồ án cá nhân (8-puzzles)
             Giải pháp Partial Observation Search cung cấp cách tiếp cận hợp lý cho bài toán 8-puzzle với thông tin không đầy đủ. Phiên bản hiện tại là một khung cơ bản tốt
             
     2.4.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán tìm kiếm nội bộ
-    ![Complex Environment](https://github.com/user-attachments/assets/2ff080f6-a24d-477a-9ead-9de03e443df9)
+![Complex Environment](https://github.com/user-attachments/assets/2ff080f6-a24d-477a-9ead-9de03e443df9)
 
 2.5 Các thuật toán tìm kiếm Constraint Satisfaction Problems (CSPs)
 
     * Thuật toán Backtracking
-    ![Backtracking](https://github.com/user-attachments/assets/f2666ba9-44e0-4de9-b6ee-0c57360c763b)
+![Backtracking](https://github.com/user-attachments/assets/f2666ba9-44e0-4de9-b6ee-0c57360c763b)
 
       _ Các thành phần chính
         + Chuyển đổi trạng thái
@@ -530,7 +532,8 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Không tối ưu: Không đảm bảo tìm được đường đi ngắn nhất
 
     * Thuật toán Backtracking With Forward Checking
-    ![ Backtracking With Forward Checking](https://github.com/user-attachments/assets/285afed6-b034-4e72-afd5-16b57c692bef)
+![ Backtracking With Forward Checking](https://github.com/user-attachments/assets/285afed6-b034-4e72-afd5-16b57c692bef)
+
       _ Các thành phần chính
 
         + Chuyển đổi trạng thái
