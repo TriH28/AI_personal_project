@@ -263,29 +263,28 @@ Báo cáo đồ án cá nhân (8-puzzles)
 ![Simple Hill Climbing](https://github.com/user-attachments/assets/d36e9cce-164c-454a-b450-7de1f3c1790f)
 
           _ Các thành phần chính
-            + Hàm đánh giá (Heuristic Function)
-              . Sử dụng khoảng cách Manhattan để đánh giá trạng thái hiện tại
-              . manhattan_distance(state) tính tổng khoảng cách từ vị trí hiện tại của các ô đến vị trí đích
-            + Trạng thái hiện tại (Current State)
-              . Bắt đầu từ trạng thái ban đầu (start_state)
-              . Theo dõi trạng thái hiện tại trong quá trình tìm kiếm
-            + Hàng xóm (Neighbors)
-              . get_neighbors(state) tạo ra các trạng thái kế tiếp bằng cách di chuyển ô trống
-              . Mỗi trạng thái có tối đa 4 hàng xóm (lên, xuống, trái, phải)
-            + Lựa chọn bước đi
-              . So sánh giá trị heuristic của các hàng xóm
-              . Chọn hàng xóm có giá trị heuristic tốt nhất (nhỏ nhất)
-            + Xử lý local optimum:
-              . Bộ đếm stuck_count để phát hiện khi bị kẹt
-              . Khi bị kẹt (>5 lần), thực hiện bước đi ngẫu nhiên có kiểm soát
-              . Cho phép di chuyển ngang (cùng giá trị heuristic) để thoát local optimum
+            + Heuristic (Manhattan Distance)
+              . manhattan_distance(state): Tính tổng khoảng cách từ vị trí hiện tại của các ô đến vị trí đúng của chúng trong goal_state
+              . Ý nghĩa: Heuristic càng nhỏ → trạng thái càng gần đích
+            + Khởi Tạo
+              . current_state = start: Bắt đầu từ trạng thái ban đầu
+              . current_h = manhattan_distance(current_state): Tính heuristic ban đầu
+              . path = [current_state]: Lưu lại đường đi.
+            + Vòng Lặp Chính (Tối đa max_steps lần)
+              . Kiểm tra đích: Nếu current_state == goal → trả về path
+              . Tìm ô trống (blank_i, blank_j)
+              . Tạo các trạng thái kế cận (neighbors)
+              . Sắp xếp các láng giềng theo heuristic (từ nhỏ đến lớn)
+              . Chọn trạng thái tốt nhất (best_h, best_state)
+              . Nếu best_h < current_h: Di chuyển đến best_state, cập nhật path
+              . Ngược lại: Dừng thuật toán (không cải thiện được nữa)
+            + Kết Thúc
+              . Trả về path (có thể chưa đến đích nếu bị kẹt ở local optimum)
           _ Phân tích Solution
             + Ưu điểm
-              . Thuật toán chỉ cần so sánh các trạng thái lân cận
-              . Không cần lưu trữ nhiều trạng thái như BFS/DFS
-              . Chỉ lưu trữ đường đi hiện tại
-              . Không cần hàng đợi hoặc ngăn xếp như các thuật toán khác
-              . Với 8-puzzle 3x3, thường tìm được giải pháp khá nhanh
+              . Đơn giản, dễ cài đặt
+              . Tốn ít bộ nhớ (không lưu trữ nhiều trạng thái như BFS/DFS)
+              . Hiệu quả với bài toán nhỏ nếu heuristic tốt.
             + Nhược điểm
               . Khi gặp trạng thái mà mọi hàng xóm đều xấu hơn
               . Có thể không tìm thấy giải pháp tối ưu
@@ -297,58 +296,60 @@ Báo cáo đồ án cá nhân (8-puzzles)
 ![Steepest Ascen Hill Climbing](https://github.com/user-attachments/assets/dce830da-ab74-4398-8499-be9c442ec1d5) 
 
         _ Các thành phần chính
-          + Hàm Heuristic (Manhattan Distance)
-            . Đánh giá "độ tốt" của một trạng thái
-            . Tính tổng khoảng cách từ vị trí hiện tại của các ô đến vị trí đích của chúng
-          + Trạng thái hiện tại (Current State)
-            . Khởi tạo: Bắt đầu từ start_state
-            . Cập nhật: Liên tục thay đổi khi tìm được trạng thái tốt hơn
-          + Hàng xóm (Neighbors)
-            . Di chuyển ô trống (0) lên/xuống/trái/phải (nếu hợp lệ)
-            . Mỗi trạng thái có tối đa 4 hàng xóm
-          + Lựa chọn bước đi (Steepest Ascent)
-            . Không chọn hàng xóm đầu tiên tốt hơn.
-            . Duyệt tất cả hàng xóm và chọn trạng thái tốt nhất (có manhattan_distance nhỏ nhất)
-          + Xử lý Local Optimum (Tối ưu cục bộ)
-            . Chọn ngẫu nhiên một hàng xóm để thoát khỏi bế tắc
-          + Giới hạn số lần thử (max_attempts)
-            . Nếu vượt quá max_attempts mà chưa tìm ra giải pháp → Dừng thuật toán
+          + Heuristic (Manhattan Distance)
+            . manhattan_distance(state): Tính tổng khoảng cách từ vị trí hiện tại của các ô đến vị trí đúng của chúng trong goal_state
+            . Heuristic càng nhỏ → trạng thái càng gần đích
+          + Khởi Tạo
+            . current_state = start: Bắt đầu từ trạng thái ban đầu
+            . current_h = manhattan_distance(current_state): Tính heuristic ban đầu
+            . path = [current_state]: Lưu lại đường đi
+            . visited = set(): Theo dõi các trạng thái đã thăm để tránh lặp
+          + Vòng Lặp Chính (Tối đa max_steps lần)
+            . Kiểm tra đích: Nếu current_state == goal → trả về path)
+            . Tìm ô trống (blank_i, blank_j)
+            . Tạo các trạng thái kế cận (neighbors)
+            . Chọn trạng thái tốt nhất (best_h, best_state) từ neighbors (heuristic nhỏ nhất
+            . Nếu best_h < current_h: Di chuyển đến best_state, cập nhật path và visited
+            . Nếu best_h == current_h (plateau): Chọn ngẫu nhiên một trạng thái trong các trạng thái cùng heuristic
+            . Nếu best_h > current_h: Dừng thuật toán (không cải thiện được nữa)
+          + Kết Thúc
+            . Trả về path (có thể chưa đến đích nếu bị kẹt ở local optimum hoặc plateau)
         _ Phân tích Solution
           + Ưu điểm
             . Luôn chọn bước đi tối ưu nhất trong các hàng xóm → Giảm số bước không cần thiết
             . Nếu không tìm được trạng thái tốt hơn → Di chuyển ngẫu nhiên để tránh bị kẹt
             . Chỉ lưu đường đi hiện tại, không cần hàng đợi/ngăn xếp như BFS/DFS
           + Nhược điểm
-            . Nếu không có hàng xóm nào tốt hơn, thuật toán phải chọn ngẫu nhiên → Không đảm bảo tìm ra giải pháp
-            . Có thể tìm được giải pháp không phải ngắn nhất
-            . Nếu start_state xa goal_state, thuật toán có thể chạy lâu hơn
-
+            . Nếu tất cả láng giềng đều có heuristic lớn hơn hoặc bằng hiện tại, thuật toán dừng l
+            . Tốn thêm chi phí so với Simple Hill Climbing
       * Thuật toán Stochastic hill climbing
 ![Stochastic Hill](https://github.com/user-attachments/assets/5f3e58d1-c941-43d7-a10f-14e0cb6fd485)
 
         _ Các thành phần chính
-          + Hàm Heuristic (Manhattan Distance)
-            . Sử dụng manhattan_distance(state) để đánh giá chất lượng trạng thái
-            . Khoảng cách càng nhỏ → trạng thái càng tốt
-          + Lựa chọn hàng xóm theo xác suất
-            . Không chọn hàng xóm tốt nhất
-            . Gán xác suất chọn cho từng hàng xóm tốt hơn hoặc bằng
-          +  Cơ chế tính xác suất
-          + Chọn lựa ngẫu nhiên có trọng số
-          + Xử lý local optimum
+          + Đầu vào và Khởi tạo
+            . start: Trạng thái ban đầu của puzzle
+            . goal: Trạng thái đích cần đạt được
+            . max_steps: Số bước tối đa để tránh lặp vô hạn
+            . current_state: Lưu trạng thái hiện tại
+            . current_h: Giá trị heuristic (Manhattan distance) của trạng thái hiện tại
+            . path: Danh sách lưu các trạng thái đã đi qua.
+            . visited: Tập hợp các trạng thái đã thăm để tránh lặp
+            . stuck_count: Đếm số lần bị kẹt (không cải thiện heuristic)
+            . max_stuck: Ngưỡng kẹt tối đa trước khi chấp nhận bước đi xấu hơn.
+          + Hàm hỗ trợ
+            . find_blank(state): Tìm vị trí ô trống (0)
+            . swap_tiles(state, i1, j1, i2, j2): Hoán đổi 2 ô để tạo trạng thái mới
+            . manhattan_distance(state): Tính heuristic (khoảng cách Manhattan đến goal)
         _ Phân tích Solution
           + Ưu điểm
-            . Nhờ cơ chế chọn ngẫu nhiên có trọng số
-            . Vẫn ưu tiên các trạng thái tốt nhưng không cứng nhắc
-            . Có thể thử nghiệm nhiều hướng đi khác nhau
-            . Giảm khả năng bị kẹt vào cùng một đường đi
-            . Trạng thái chỉ tốt hơn một chút vẫn có cơ hội được chọn
+            .Tránh local optima tốt hơn Simple Hill Climbing
+            . Chấp nhận đi ngang hoặc đi xấu hơn nếu bị kẹt quá lâu
+            . Không chọn trạng thái tốt nhất mà chọn theo xác suất (ưu tiên trạng thái tốt hơn)
+            .  Theo dõi các trạng thái đã thăm (visited) → Tránh lặp vòng.
           + Nhược điểm
-            . Có thể mất nhiều bước hơn do chọn ngẫu nhiên
-            . Không chắc chắn tìm được giải pháp tối ưu
-            . Cách tính xác suất ảnh hưởng lớn đến hiệu quả
-            . Cần điều chỉnh hệ số (+0.1) cho phù hợp
-            . Các lần chạy khác nhau có thể cho kết quả khác nhau
+            . Tốn bộ nhớ do lưu visited set
+            . Không đảm bảo tìm được lời giải tối ưu (vẫn có thể bị kẹt ở một số trường hợp)
+            . Phụ thuộc vào heuristic (nếu heuristic không tốt, hiệu quả giảm)
       * Thuật toán Simulated annealing
 ![Simulated Annealing](https://github.com/user-attachments/assets/86f53cf9-7952-4254-95ff-7f03526faf84)
 
@@ -504,70 +505,58 @@ Báo cáo đồ án cá nhân (8-puzzles)
 ![Backtracking](https://github.com/user-attachments/assets/f2666ba9-44e0-4de9-b6ee-0c57360c763b)
 
       _ Các thành phần chính
-        + Chuyển đổi trạng thái
-          . Mục đích: Chuyển từ biểu diễn ma trận 3x3 sang danh sách phẳng 9 phần tử
-          . Lợi ích: Dễ dàng thao tác với vị trí ô trống và hoán đổi giá trị
-        + Hàm đệ quy backtrack
-          . current_state: Trạng thái hiện tại (dạng list phẳng)
-          . path: Lịch sử các trạng thái đã đi qua
-          . visited: Tập hợp các trạng thái đã thăm
-          . depth: Độ sâu đệ quy (phòng tràn stack)
-        + Điều kiện dừng
-          . Kiểm tra đích: So sánh với trạng thái mục tiêu
-          . Giới hạn đệ quy: Tránh đệ quy quá sâu (có thể điều chỉnh)
-        + Thử các hướng di chuyển
-          . Tìm ô trống: Xác định vị trí hiện tại của số 0
-          . Tạo trạng thái mới: Hoán đổi ô trống với ô lân cận hợp lệ
-        + Quản lý visited states
-          . Tránh lặp: Sử dụng set visited để ghi nhớ các trạng thái đã xét
-          . Quay lui (backtrack): Gỡ bỏ trạng thái khỏi tập visited nếu không dẫn đến lời giải
+        + Khởi tạo
+          . Tạo bảng trống 3x3 (toàn số 0)
+          . Khởi tạo domains cho mỗi ô: ban đầu mỗi ô có thể nhận giá trị từ 0-8
+          . Sử dụng kỹ thuật CSP (Constraint Satisfaction Problem) để giải quyết
+        +  Hàm kiểm tra hợp lệ (is_valid)
+          . Kiểm tra các số từ 1-8 chỉ xuất hiện duy nhất 1 lần (không trùng lặp)
+          . Số 0 được coi là ô trống và có thể có nhiều ô 0
+        + Hàm Backtrack đệ quy
+        ` . Tham số: current_state (trạng thái hiện tại), depth (độ sâu đệ quy)
+        + Thuật toán Backtracking chính
+          . Sử dụng đệ quy để thử các giá trị có thể
+          . Kết hợp với heuristic MRV (Minimum Remaining Values) để chọn ô có ít lựa chọn nhất
+          . Áp dụng Forward Checking để loại bỏ các giá trị không hợp lệ khỏi domains của các ô khác
       _ Phân tích solution
-        +  Ưu điểm 
-          . Đơn giản và trực quan: Dễ hiểu và triển khai
-          . Đảm bảo tìm lời giải: Nếu tồn tại và trong giới hạn độ sâu
-          . Quản lý bộ nhớ tốt: Sử dụng set để tránh xét lại các trạng thái
+        + Ưu điểm
+          . Hiển thị trực quan từng bước giải
+          . Tận dụng các kỹ thuật CSP để tối ưu
+          . Đảm bảo tìm được solution nếu tồn tại (tính đầy đủ)
         + Nhược điểm
-          . Hiệu suất thấp: Độ phức tạp thời gian cao (O(b^d) với b là nhân tố nhánh, d là độ sâu)
-          . Giới hạn độ sâu: Có thể bỏ sót lời giải nếu nằm ngoài giới hạn depth
-          . Không tối ưu: Không đảm bảo tìm được đường đi ngắn nhất
+          . Độ phức tạp cao do phải thử nhiều trường hợp
+          . Không sử dụng heuristic để hướng dẫn tìm kiếm ngoài việc sắp xếp domain
+          . Có thể không hiệu quả với puzzle kích thước lớn hơn   
 
     * Thuật toán Backtracking With Forward Checking
 ![ Backtracking With Forward Checking](https://github.com/user-attachments/assets/285afed6-b034-4e72-afd5-16b57c692bef)
 
       _ Các thành phần chính
 
-        + Chuyển đổi trạng thái
-          . Mục đích: Chuyển trạng thái từ dạng ma trận (list[list]) sang tuple[tuple] để có thể lưu vào set (vì set chỉ chấp nhận kiểu dữ liệu hashable)
-          . Lợi ích: Giúp kiểm tra trạng thái đã thăm (visited) hiệu quả
-        + Hàm Heuristic (Manhattan Distance)
-          . Mục đích: Ước lượng khoảng cách từ trạng thái hiện tại đến trạng thái đích
-          . Cách tính: Tính tổng khoảng cách Manhattan của từng ô (trừ ô trống)
-          . Tác dụng: Giúp sắp xếp các bước đi tiềm năng theo thứ tự ưu tiên, tăng tốc độ tìm kiếm
+        + Khởi tạo
+          . Tạo bảng trống 3x3 (toàn số 0)
+          . Khởi tạo domains cho mỗi ô: ban đầu mỗi ô có thể nhận giá trị từ 0-8
+          . Sử dụng kỹ thuật CSP (Constraint Satisfaction Problem) để giải quyết
+        +  Hàm kiểm tra hợp lệ (is_valid)
+          . Kiểm tra các số từ 1-8 chỉ xuất hiện duy nhất 1 lần (không trùng lặp)
+          . Số 0 được coi là ô trống và có thể có nhiều ô 0
         + Hàm Backtrack đệ quy
         ` . Tham số: current_state (trạng thái hiện tại), depth (độ sâu đệ quy)
-        + Điều kiện dừng
-          . Đạt đến max_depth (tránh stack overflow)
-          . Tìm thấy goal_state
-          . Trạng thái đã được thăm (visited)
-        + Forward Checking (Kiểm tra tiến)
-          . Mục đích: Kiểm tra các bước đi hợp lệ và loại bỏ những trạng thái đã thăm
-        + Quay lui (Backtracking)
-          . Thử từng bước đi (path.append)
-          . Nếu không tìm thấy lời giải (backtrack trả False), quay lui (path.pop)
-          . Xóa trạng thái khỏi visited để thử các nhánh khác
+        + Thuật toán Backtracking chính
+          . Sử dụng đệ quy để thử các giá trị có thể
+          . Kết hợp với heuristic MRV (Minimum Remaining Values) để chọn ô có ít lựa chọn nhất
+          . Áp dụng Forward Checking để loại bỏ các giá trị không hợp lệ khỏi domains của các ô khác
       _ Phân tích solution
         + Ưu điểm
-          . Forward Checking giúp loại bỏ sớm các trạng thái không khả thi
-          . Heuristic (Manhattan Distance) hướng dẫn tìm kiếm nhanh hơn
-          . max_depth giới hạn độ sâu đệ quy
-          . visited tránh xét lại các trạng thái đã thăm
-          . Tìm lời giải tối ưu (nếu heuristic đủ tốt)
+          . Hiển thị trực quan từng bước giải
+          . Tận dụng các kỹ thuật CSP để tối ưu
+          . Đảm bảo tìm được solution nếu tồn tại (tính đầy đủ)
         + Nhược điểm
-          . Vẫn có độ phức tạp cao (O(b^d) trong trường hợp xấu nhất)
-          . Nếu manhattan_distance không đủ tốt, thuật toán có thể chậm
-          . Không đảm bảo tìm được lời giải ngắn nhất (vì không phải BFS)
+          . Độ phức tạp cao do phải thử nhiều trường hợp
+          . Không sử dụng heuristic để hướng dẫn tìm kiếm ngoài việc sắp xếp domain
+          . Có thể không hiệu quả với puzzle kích thước lớn hơn   
           
-      Thuật toán này cân bằng giữa tính đơn giản và hiệu suất, phù hợp cho các bài toán vừa và nhỏ.
+      =>Thuật toán này cân bằng giữa tính đơn giản và hiệu suất, phù hợp cho các bài toán vừa và nhỏ.
 
     * Thuật toán Min-Conflicts
 
