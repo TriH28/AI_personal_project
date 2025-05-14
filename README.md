@@ -510,14 +510,20 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Khởi tạo domains cho mỗi ô: ban đầu mỗi ô có thể nhận giá trị từ 0-8
           . Sử dụng kỹ thuật CSP (Constraint Satisfaction Problem) để giải quyết
         +  Hàm kiểm tra hợp lệ (is_valid)
-          . Kiểm tra các số từ 1-8 chỉ xuất hiện duy nhất 1 lần (không trùng lặp)
-          . Số 0 được coi là ô trống và có thể có nhiều ô 0
+          . Kiểm tra không trùng giá trị trên cùng hàng
+          . Kiểm tra không trùng giá trị trên cùng cột
+          . Kiểm tra giá trị chưa xuất hiện ở các hàng phía trên
         + Hàm Backtrack đệ quy
         ` . Tham số: current_state (trạng thái hiện tại), depth (độ sâu đệ quy)
-        + Thuật toán Backtracking chính
-          . Sử dụng đệ quy để thử các giá trị có thể
-          . Kết hợp với heuristic MRV (Minimum Remaining Values) để chọn ô có ít lựa chọn nhất
-          . Áp dụng Forward Checking để loại bỏ các giá trị không hợp lệ khỏi domains của các ô khác
+        + Hiển thị trạng thái (draw_state_with_current_var)
+          . Hiển thị ma trận với ô đang xét được đánh dấu màu khác
+          . Hiển thị giá trị đã điền hoặc dấu "?" cho ô đang xét
+        + Thuật toán đệ quy (backtrack)
+          . Kiểm tra điều kiện đạt goal
+          . Thử lần lượt các giá trị trong miền
+          . Gán giá trị tạm thời và kiểm tra hợp lệ
+          . Nếu hợp lệ, tiếp tục đệ quy với ô tiếp theo
+          . Nếu không hợp lệ, quay lui (backtrack) và thử giá trị khác
       _ Phân tích solution
         + Ưu điểm
           . Hiển thị trực quan từng bước giải
@@ -525,36 +531,41 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Đảm bảo tìm được solution nếu tồn tại (tính đầy đủ)
         + Nhược điểm
           . Độ phức tạp cao do phải thử nhiều trường hợp
-          . Không sử dụng heuristic để hướng dẫn tìm kiếm ngoài việc sắp xếp domain
-          . Có thể không hiệu quả với puzzle kích thước lớn hơn   
+          . Không có cơ chế phát hiện sớm dead-end: Chỉ phát hiện vi phạm ràng buộc khi đã gán giá trị
+          . Lãng phí thời gian: Có thể thử nhiều giá trị vô ích do không loại bỏ sớm các lựa chọn không khả thi 
 
     * Thuật toán Backtracking With Forward Checking
 ![ Backtracking With Forward Checking](https://github.com/user-attachments/assets/285afed6-b034-4e72-afd5-16b57c692bef)
 
       _ Các thành phần chính
-
-        + Khởi tạo
-          . Tạo bảng trống 3x3 (toàn số 0)
-          . Khởi tạo domains cho mỗi ô: ban đầu mỗi ô có thể nhận giá trị từ 0-8
-          . Sử dụng kỹ thuật CSP (Constraint Satisfaction Problem) để giải quyết
-        +  Hàm kiểm tra hợp lệ (is_valid)
-          . Kiểm tra các số từ 1-8 chỉ xuất hiện duy nhất 1 lần (không trùng lặp)
-          . Số 0 được coi là ô trống và có thể có nhiều ô 0
-        + Hàm Backtrack đệ quy
-        ` . Tham số: current_state (trạng thái hiện tại), depth (độ sâu đệ quy)
-        + Thuật toán Backtracking chính
-          . Sử dụng đệ quy để thử các giá trị có thể
-          . Kết hợp với heuristic MRV (Minimum Remaining Values) để chọn ô có ít lựa chọn nhất
-          . Áp dụng Forward Checking để loại bỏ các giá trị không hợp lệ khỏi domains của các ô khác
+        + Biểu diễn bài toán dưới dạng CSP
+          . Variables: Các ô trong bảng (i,j) với i,j ∈ {0,1,2}
+          . Domains: Giá trị từ 1-8 cho các ô (0 là ô trống cố định)
+          . Constraints: mỗi số từ 1-8 xuất hiện đúng 1 lần, các số phải được sắp xếp theo thứ tự goal state
+        +  Hàm is_valid()
+          . Kiểm tra tính hợp lệ của giá trị được gán
+          . Đảm bảo không có số trùng lặp trên cùng hàng/cột
+          . Kiểm tra các ô trước đó đã được điền đúng
+        + Hàm forward_checking()
+        ` . Khi gán giá trị cho một biến, loại bỏ giá trị đó khỏi domain của các biến liên quan
+          . Nếu domain của bất kỳ biến nào rỗng → quay lui
+        + Hàm select_unassigned_variable()
+          . Chọn biến chưa được gán theo heuristic MRV (Minimum Remaining Values)
+          . Ưu tiên biến có ít giá trị khả dĩ nhất
+        + Hàm order_domain_values()
+          . Sắp xếp các giá trị trong domain theo heuristic LCV (Least Constraining Value)
+          . Ưu tiên giá trị gây ít ràng buộc nhất lên các biến khác
       _ Phân tích solution
         + Ưu điểm
-          . Hiển thị trực quan từng bước giải
-          . Tận dụng các kỹ thuật CSP để tối ưu
-          . Đảm bảo tìm được solution nếu tồn tại (tính đầy đủ)
+          . Giảm không gian tìm kiếm: Loại bỏ sớm các giá trị không hợp lệ khỏi miền của biến chưa gán
+          . Phát hiện dead-end sớm: Nhận biết ngay khi một biến không còn giá trị hợp lệ nào
+          . Hiệu quả hơn BT cơ bản: Giảm đáng kể số lượng phép thử cần thực hiện
+          . Vẫn giữ tính trực quan: Có thể hiển thị quá trình cập nhật miền giá trị
         + Nhược điểm
-          . Độ phức tạp cao do phải thử nhiều trường hợp
-          . Không sử dụng heuristic để hướng dẫn tìm kiếm ngoài việc sắp xếp domain
-          . Có thể không hiệu quả với puzzle kích thước lớn hơn   
+          . Phức tạp hơn trong cài đặt: Cần quản lý và cập nhật miền giá trị cho từng biến
+          . Chi phí tính toán bổ sung: Tốn thời gian cho việc cập nhật và kiểm tra miền giá trị
+          . Chưa tối ưu bằng các thuật toán nâng cao khác: Như Maintaining Arc Consistency (MAC) hay sử dụng heuristic
+          . Trong code hiện tại chưa triển khai đầy đủ: Thiếu phần cập nhật miền giá trị khi gán biến
           
       =>Thuật toán này cân bằng giữa tính đơn giản và hiệu suất, phù hợp cho các bài toán vừa và nhỏ.
 
