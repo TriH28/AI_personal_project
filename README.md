@@ -86,7 +86,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
             + Tập hợp đã thăm (Visited Set)
               . Chức năng: Tránh xét lại các trạng thái đã duyệt
             + Hàm tính chi phí
-              . Đặc điểm: Trong UCS cho 8-puzzle, mỗi bước di chuyển có chi phí bằng nhau (1)
+              . Đặc điểm: Trong UCS cho 8-puzzle, mỗi bước di chuyển có chi phí bằng nhau
           _ Phân tích Solution
             + Tối ưu
               . UCS luôn tìm ra lộ trình có tổng chi phí thấp nhất, tức là ít bước nhất nếu mỗi bước có cùng chi phí
@@ -569,45 +569,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
           
       =>Thuật toán này cân bằng giữa tính đơn giản và hiệu suất, phù hợp cho các bài toán vừa và nhỏ.
 
-    * Thuật toán Min-Conflicts
-
-      _ Các thành phần chính
-        + Khởi tạo trạng thái và bản đồ vị trí mục tiêu
-          . current: Lưu trạng thái hiện tại (dạng list để có thể thay đổi)
-          . goal_positions: Bản đồ lưu vị trí đúng của từng số trong trạng thái đích (giúp tính toán xung đột nhanh)
-        + Vòng lặp chính (tối đa max_steps)
-          . Mục đích: Lặp tối đa max_steps lần để tìm lời giải
-          . Kiểm tra điều kiện dừng: Nếu trạng thái hiện tại khớp với goal, trả về kết quả
-        + Phát hiện xung đột (conflict detection)
-          . Mục đích: Tìm tất cả các ô có giá trị không nằm đúng vị trí mục tiêu
-          . Cách tính xung đột: Khoảng cách Manhattan từ vị trí hiện tại đến vị trí đúng
-          . Kết quả: Danh sách conflicts chứa các ô cần điều chỉnh
-        + Chọn ô có xung đột lớn nhất
-          . Logic: Ưu tiên sửa những ô có sai lệch lớn nhất so với vị trí đúng
-          . Nếu không có xung đột: Dừng vòng lặp (đã giải xong)
-        + Tìm bước di chuyển tối ưu (chỉ di chuyển ô trống)
-          . Mục đích: Tìm hướng di chuyển ô trống làm giảm nhiều xung đột nhất
-          . Với mỗi ô lân cận ô trống, thử hoán đổi
-          . Tính toán số xung đột trước/sau khi di chuyển
-          . Chọn bước di chuyển giảm xung đột nhiều nhất
-        + Áp dụng bước di chuyển tốt nhất
-          . Thực hiện di chuyển: Hoán đổi ô trống với ô lân cận được chọn
-          . Trong 8-Puzzle, chỉ ô trống có thể di chuyển → thuật toán phải điều chỉnh để phù hợp
-      _ Phân tích Solution
-        + Ưu điểm
-          . Tập trung vào xung đột lớn nhất: Giúp giảm nhanh sai lệch so với mục tiêu
-          . Không cần backtracking: Tiết kiệm bộ nhớ so với các thuật toán quay lui
-          . Phù hợp với bài toán ràng buộc: Đặc biệt hiệu quả với CSP (Constraint Satisfaction Problems)
-        + Nhược điểm
-          . Không đảm bảo tìm được lời giải: Có thể mắc kẹt ở local optima
-          . Hiệu suất phụ thuộc vào heuristic: Nếu chọn sai ô để điều chỉnh, thuật toán có thể chậm
-          . Không tối ưu cho 8-Puzzle: Do chỉ di chuyển được ô trống, khả năng giảm xung đột bị hạn chế
-        + Giải thích lý do không giải được bài toán 8 puzzles
-          . Không gian trạng thái bị ràng buộc chặt
-          . Chỉ được phép di chuyển ô trống, không phải gán giá trị tùy ý
-          . Việc chuyển từ trạng thái này sang trạng thái khác bị giới hạn nghiêm ngặt bởi hành động hợp lệ
-          . Hàm đánh giá quá "mù mờ" và dễ kẹt
-          . Tổng khoảng cách Manhattan làm hàm xung đột — điều này giống với heuristic của A*, nhưng Min-Conflicts không đảm bảo thoát khỏi local minimum nếu không có random walk hay cơ chế nhảy thoát (như simulated annealing)
+    
     2.5.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán Constraint Satisfaction Problems
     ![CSPs](https://github.com/user-attachments/assets/f84afaa6-a56f-4f80-91ba-b2c38df55e7d)
 
