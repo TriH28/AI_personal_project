@@ -571,7 +571,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
 
     
     2.5.2 Hình ảnh gif của các thuật toán trong nhóm thuật toán Constraint Satisfaction Problems
-    ![CSPs](https://github.com/user-attachments/assets/f84afaa6-a56f-4f80-91ba-b2c38df55e7d)
+   ![CSPs](https://github.com/user-attachments/assets/3b29ced6-9a4b-463c-83fd-0d5f7b3efec9)
 
 2.6 Các thuật toán tìm kiếm Reinforcement Learning
 
