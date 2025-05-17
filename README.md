@@ -502,7 +502,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
 2.5 Các thuật toán tìm kiếm Constraint Satisfaction Problems (CSPs)
 
     * Thuật toán Backtracking
-![Backtracking](https://github.com/user-attachments/assets/f2666ba9-44e0-4de9-b6ee-0c57360c763b)
+![Backtracking](https://github.com/user-attachments/assets/d81853da-503b-4c04-bf65-17a812fbbea7)
 
       _ Các thành phần chính
         + Khởi tạo
@@ -535,7 +535,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
           . Lãng phí thời gian: Có thể thử nhiều giá trị vô ích do không loại bỏ sớm các lựa chọn không khả thi 
 
     * Thuật toán Backtracking With Forward Checking
-![ Backtracking With Forward Checking](https://github.com/user-attachments/assets/285afed6-b034-4e72-afd5-16b57c692bef)
+![Backtracking With Forward Checking](https://github.com/user-attachments/assets/14ef2503-bc53-4bfb-88d0-cfc628964b0b)
 
       _ Các thành phần chính
         + Biểu diễn bài toán dưới dạng CSP
