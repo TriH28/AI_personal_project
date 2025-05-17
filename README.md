@@ -241,7 +241,7 @@ Báo cáo đồ án cá nhân (8-puzzles)
           + Nhược điểm
             . Tiêu tốn bộ nhớ do lưu trữ nhiều trạng thái
             . Phức tạp khi kích thước puzzle tăng
-        _ UCS (Uniform Cost Search)
+        _ IDA* (Uniform Cost Search)
           + Ưu điểm
             . Tối ưu như A*
             . Đơn giản hơn A*
