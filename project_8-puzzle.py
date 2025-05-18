@@ -47,6 +47,8 @@ button_font = pygame.font.Font(None, 30)
 selected_algorithm = None
 highlighted_tiles = []
 execution_time = ""  
+current_step = 0
+total_steps = 0
 
 def draw_grid(state):
     """Vẽ lưới ô số với kích thước nhỏ hơn"""
@@ -81,13 +83,13 @@ def draw_buttons():
     button_texts = ["BFS", "DFS", "UCS", "IDDFS", "A*", 
                    "IDA*", "Greedy", "Simple HC", "Steepest HC", "Stochastic HC", 
                    "SA","Beam", "GA", "Nondet", "Partial Obs",
-                   "BT","BT_FC","Min-Conflicts","Q-Learning", "New State", "QUIT"]
+                   "BT","BT_FC","Q-Learning", "New State", "QUIT"]
 
     colors = [
         (255, 50, 50), (80, 80, 80), (255, 200, 50), (50, 200, 100), (220, 220, 220),
         (100, 50, 200), (150, 100, 200), (200, 100, 50), (200, 50, 100), (200, 150, 50),
         (50, 150, 200), (150, 200, 150), (100, 200, 100), (150, 150, 255), (255, 150, 150),
-        (100, 255, 200), (50, 150, 50),(200, 100, 150),(150, 100, 150),(100, 200, 200),(200, 50, 50)
+        (100, 255, 200), (50, 150, 50),(150, 100, 150),(100, 200, 200),(200, 50, 50)
     ]
 
     buttons = []
@@ -120,7 +122,7 @@ def draw_buttons():
     return buttons
 
 def draw_execution_time():
-    """Vẽ ô thời gian chạy thuật toán"""
+    """Vẽ ô thông tin thời gian chạy và số bước"""
     time_box_rect = pygame.Rect(
         10, 
         TILE_SIZE * GRID_SIZE + 50, 
@@ -129,7 +131,10 @@ def draw_execution_time():
     )
     pygame.draw.rect(screen, (50, 50, 50), time_box_rect, border_radius=8)
     pygame.draw.rect(screen, (0, 0, 0), time_box_rect, 2)
-    time_text = execution_font.render(f"Execution Time: {execution_time}", True, (255, 255, 255))
+    
+    # Tạo text kết hợp thời gian và số bước
+    info_text = f"Time: {execution_time} | Steps: {current_step}/{total_steps}" if total_steps > 0 else f"Time: {execution_time}"
+    time_text = execution_font.render(info_text, True, (255, 255, 255))
     text_rect = time_text.get_rect(center=time_box_rect.center)
     screen.blit(time_text, text_rect)
     
@@ -308,48 +313,30 @@ def simple_hill_climbing(start, goal, max_steps=1000):
     current_state = start
     current_h = manhattan_distance(current_state)
     path = [current_state]
-    visited = set()  # Theo dõi các trạng thái đã thăm
-    visited.add(current_state)
     
     for _ in range(max_steps):
         if current_state == goal:
             return path
             
         blank_i, blank_j = find_blank(current_state)
-        neighbors = []
+        improved = False
         
-        # Tạo các trạng thái kế cận chưa thăm
+        # Tạo các trạng thái kế cận và tìm trạng thái tốt hơn
         for di, dj in directions:
             ni, nj = blank_i + di, blank_j + dj
             if 0 <= ni < GRID_SIZE and 0 <= nj < GRID_SIZE:
                 new_state = swap_tiles(current_state, blank_i, blank_j, ni, nj)
-                if new_state not in visited:
-                    new_h = manhattan_distance(new_state)
-                    neighbors.append((new_h, new_state))
+                new_h = manhattan_distance(new_state)
+                
+                if new_h < current_h:  # Chỉ di chuyển nếu tốt hơn
+                    current_state = new_state
+                    current_h = new_h
+                    path.append(current_state)
+                    improved = True
+                    break  # Di chuyển ngay khi tìm thấy trạng thái tốt hơn
         
-        if not neighbors:
+        if not improved:  # Không còn trạng thái tốt hơn → DỪNG
             break
-            
-        neighbors.sort()  
-        
-        # Chọn trạng thái tốt nhất chưa thăm
-        for h, state in neighbors:
-            if h <= current_h:  
-                current_state = state
-                current_h = h
-                path.append(current_state)
-                visited.add(current_state)
-                break
-        else:
-            # Nếu không có trạng thái tốt hơn, chọn ngẫu nhiên trong các trạng thái chưa thăm
-            unvisited = [state for h, state in neighbors if state not in visited]
-            if unvisited:
-                current_state = random.choice(unvisited)
-                current_h = manhattan_distance(current_state)
-                path.append(current_state)
-                visited.add(current_state)
-            else:
-                break
     
     return path
 
@@ -630,6 +617,7 @@ def genetic_algorithm(start, goal, population_size=50, generations=1000, mutatio
     
     print(f"Genetic Algorithm finished after {generations} generations. Best fitness: {best_fitness}")
     return best_solution  
+
 def get_nondeterministic_neighbors(state, success_prob=0.8):
     """Lấy các trạng thái kề với xác suất thành công"""
     blank_i, blank_j = find_blank(state)
@@ -840,215 +828,263 @@ def partial_observation_search(start, goal, num_hidden=4):
     return path
 
 #  Hàm Backtracking  solver
-def BT (start, goal):
-    """Giải bằng Backtracking"""
-    try:
-        # Chuyển đổi trạng thái thành danh sách phẳng
-        flat_start = [num for row in start for num in row]
-        flat_goal = [num for row in goal for num in row]
-        
-        # Tìm vị trí ô trống
-        blank_pos = flat_start.index(0)
-        
-        # Hàm đệ quy để thử các bước đi
-        def backtrack(current_state, path, visited, depth=0):
-            # Giới hạn độ sâu để tránh đệ quy quá sâu
-            if depth > 50:  # Giới hạn độ sâu tối đa
-                return None
-                
-            if tuple(current_state) == tuple(flat_goal):
-                return path
-            
-            blank_pos = current_state.index(0)
-            x, y = blank_pos // GRID_SIZE, blank_pos % GRID_SIZE
-            
-            # Thử các hướng di chuyển có thể
-            for di, dj in directions:
-                ni, nj = x + di, y + dj
-                if 0 <= ni < GRID_SIZE and 0 <= nj < GRID_SIZE:
-                    new_blank_pos = ni * GRID_SIZE + nj
-                    new_state = current_state.copy()
-                    # Hoán đổi ô trống với ô lân cận
-                    new_state[blank_pos], new_state[new_blank_pos] = new_state[new_blank_pos], new_state[blank_pos]
-                    
-                    state_tuple = tuple(new_state)
-                    if state_tuple not in visited:
-                        visited.add(state_tuple)
-                        result = backtrack(new_state, path + [new_state], visited, depth + 1)
-                        if result is not None:
-                            return result
-                        visited.remove(state_tuple)  
-            return None
-        
-        # Chạy backtracking
-        visited = set()
-        visited.add(tuple(flat_start))
-        solution = backtrack(flat_start, [flat_start], visited)
-        
-        if solution:
-            # Chuyển đổi lại về dạng tuple 2D
-            converted_solution = []
-            for state in solution:
-                converted_state = (
-                    (state[0], state[1], state[2]),
-                    (state[3], state[4], state[5]),
-                    (state[6], state[7], state[8])
-                )
-                converted_solution.append(converted_state)
-            return converted_solution
-        return None
-    except Exception as e:
-        print(f"Error in CSP solver: {e}")
-        return None
+def BT(start, goal):
+    """Giải bằng Backtracking với hiệu ứng điền từng ô"""
+    csp_window = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Backtracking Visual Solver")
+    current_state = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
+    variables = [(i, j) for i in range(GRID_SIZE) for j in range(GRID_SIZE)]
 
-def backtracking_with_forward_checking(start, goal, max_depth=30):
-    """Giải bằng Backtracking với Forward Checking cải tiến"""
-    path = []
-    visited = set()
-    
-    # Chuyển đổi trạng thái sang tuple để có thể hash và lưu vào set
-    start_tuple = tuple(tuple(row) for row in start)
-    goal_tuple = tuple(tuple(row) for row in goal)
-    
-    def manhattan_distance(state):
-        """Tính khoảng cách Manhattan đến goal"""
-        distance = 0
-        for i in range(GRID_SIZE):
-            for j in range(GRID_SIZE):
-                val = state[i][j]
-                if val != 0:  
-                    goal_i, goal_j = divmod(val-1, GRID_SIZE)
-                    distance += abs(i - goal_i) + abs(j - goal_j)
-        return distance
-    
-    def backtrack(current_state, depth):
-        nonlocal path
-        if depth > max_depth:
-            return False
-            
-        current_tuple = tuple(tuple(row) for row in current_state)
-        if current_tuple == goal_tuple:
-            path.append(current_state)
-            return True
-            
-        if current_tuple in visited:
-            return False
-            
-        visited.add(current_tuple)
-        blank_i, blank_j = find_blank(current_state)
-        
-        # Tạo danh sách các bước đi tiềm năng và sắp xếp theo heuristic
-        moves = []
-        for di, dj in directions:
-            ni, nj = blank_i + di, blank_j + dj
-            if 0 <= ni < GRID_SIZE and 0 <= nj < GRID_SIZE:
-                new_state = swap_tiles(current_state, blank_i, blank_j, ni, nj)
-                new_tuple = tuple(tuple(row) for row in new_state)
-                if new_tuple not in visited:
-                    # Ưu tiên các bước đi có khoảng cách Manhattan nhỏ hơn
-                    moves.append((manhattan_distance(new_state), new_state))
-        
-        # Sắp xếp các bước đi theo heuristic tốt nhất trước
-        moves.sort()
-        
-        for _, new_state in moves:
-            path.append(current_state)
-            if backtrack(new_state, depth+1):
-                return True
-            path.pop()
-        
-        visited.remove(current_tuple)
-        return False
-    
-    if backtrack(start, 0):
-        return path
-    return None
+    domains = {var: set(range(1, 9)) for var in variables}  # Các số từ 1-8
 
-def min_conflicts(start, goal, max_steps=1000):
-    """Giải bằng thuật toán Min-Conflicts"""
-    current = [list(row) for row in start]
-    goal_positions = {}
-    for i in range(GRID_SIZE):
+
+    # Hàm kiểm tra tính hợp lệ
+    def is_valid(state, var, value):
+        row, col = var
+        
         for j in range(GRID_SIZE):
-            goal_positions[goal[i][j]] = (i, j)
-    
-    for _ in range(max_steps):
-        # Kiểm tra nếu đã đạt mục tiêu
-        if tuple(tuple(row) for row in current) == goal:
-            return [tuple(tuple(row) for row in current)]
+            if j != col and state[row][j] == value:
+                return False
         
-        # Tìm ô có xung đột lớn nhất (không đúng vị trí)
-        conflicts = []
+        for i in range(GRID_SIZE):
+            if i != row and state[i][col] == value:
+                return False
+        
+        for prev_row in range(row): 
+            if value in state[prev_row]:
+                return False
+        
+        return True
+    
+    # Hàm hiển thị trạng thái với ô đang xét được đánh dấu
+    def draw_state_with_current_var(state, current_var=None):
+        csp_window.fill((30, 30, 30))
+        grid_start_x = (WIDTH - (TILE_SIZE * GRID_SIZE)) // 2
+        grid_start_y = 30
+        
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
-                value = current[i][j]
+                value = state[i][j]
+                rect = pygame.Rect(
+                    grid_start_x + j * TILE_SIZE,
+                    grid_start_y + i * TILE_SIZE,
+                    TILE_SIZE,
+                    TILE_SIZE
+                )
+                
+                if current_var and (i,j) == current_var:
+                    pygame.draw.rect(csp_window, (200, 200, 100), rect, border_radius=6)
+                    pygame.draw.rect(csp_window, (0, 0, 0), rect, 2)
+                elif value == 0:
+                    pygame.draw.rect(csp_window, (100, 100, 100), rect, border_radius=6)
+                    pygame.draw.rect(csp_window, (0, 0, 0), rect, 2)
+                else:
+                    color = TILE_COLORS[value]
+                    pygame.draw.rect(csp_window, color, rect, border_radius=6)
+                    pygame.draw.rect(csp_window, (0, 0, 0), rect, 2)
+                
                 if value != 0:
-                    goal_i, goal_j = goal_positions[value]
-                    if (i, j) != (goal_i, goal_j):
-                        conflicts.append((abs(i-goal_i) + abs(j-goal_j), (i, j)))
+                    text = font.render(str(value), True, (255, 255, 255))
+                    text_rect = text.get_rect(center=rect.center)
+                    csp_window.blit(text, text_rect)
+                elif current_var and (i,j) == current_var:
+                    text = font.render("?", True, (0, 0, 0))
+                    text_rect = text.get_rect(center=rect.center)
+                    csp_window.blit(text, text_rect)
         
-        if not conflicts:
-            break  
-        
-        # Chọn ô có xung đột lớn nhất
-        _, (i, j) = max(conflicts)
-        value = current[i][j]
-        
-        # Tìm vị trí tốt nhất để di chuyển ô này
-        best_move = None
-        min_conflict = float('inf')
-        blank_i, blank_j = find_blank(tuple(tuple(row) for row in current))
-        
-        # Thử các hướng di chuyển có thể
-        for di, dj in directions:
-            ni, nj = i + di, j + dj
-            if 0 <= ni < GRID_SIZE and 0 <= nj < GRID_SIZE:
-                
-                pass
-        
-        
-        
-        blank_i, blank_j = find_blank(tuple(tuple(row) for row in current))
-        best_move = None
-        best_improvement = -1
-        
-        for di, dj in directions:
-            ni, nj = blank_i + di, blank_j + dj
-            if 0 <= ni < GRID_SIZE and 0 <= nj < GRID_SIZE:
-                # Tính số xung đột hiện tại
-                current_conflicts = 0
-                for x in range(GRID_SIZE):
-                    for y in range(GRID_SIZE):
-                        val = current[x][y]
-                        if val != 0:
-                            gx, gy = goal_positions[val]
-                            current_conflicts += abs(x - gx) + abs(y - gy)
-                
-                # Thử hoán đổi
-                current[blank_i][blank_j], current[ni][nj] = current[ni][nj], current[blank_i][blank_j]
-                
-                # Tính số xung đột mới
-                new_conflicts = 0
-                for x in range(GRID_SIZE):
-                    for y in range(GRID_SIZE):
-                        val = current[x][y]
-                        if val != 0:
-                            gx, gy = goal_positions[val]
-                            new_conflicts += abs(x - gx) + abs(y - gy)
-                
-                # Hoàn tác hoán đổi
-                current[blank_i][blank_j], current[ni][nj] = current[ni][nj], current[blank_i][blank_j]
-                
-                improvement = current_conflicts - new_conflicts
-                if improvement > best_improvement:
-                    best_improvement = improvement
-                    best_move = (ni, nj)
-        
-        if best_move:
-            ni, nj = best_move
-            current[blank_i][blank_j], current[ni][nj] = current[ni][nj], current[blank_i][blank_j]
+        pygame.display.flip()
+        pygame.time.delay(STEP_DELAY)
     
-    return [tuple(tuple(row) for row in current)] if tuple(tuple(row) for row in current) == goal else None
+    # Hàm đệ quy backtracking
+    def backtrack(assignment, var_index):
+        # Kiểm tra nếu đạt goal_state thì dừng
+        if all(assignment[i][j] == goal[i][j] for i in range(GRID_SIZE) for j in range(GRID_SIZE)):
+            return True
+        
+        # Nếu đã điền hết tất cả các ô mà chưa đạt goal_state
+        if var_index >= len(variables):
+            return False
+        
+        current_var = variables[var_index]
+        
+        # Thử các giá trị trong domain
+        for value in sorted(domains[current_var]):
+            # Gán giá trị tạm thời
+            assignment[current_var[0]][current_var[1]] = value
+            draw_state_with_current_var(assignment, current_var)
+            
+            # Kiểm tra ràng buộc
+            if is_valid(assignment, current_var, value):
+                # Tiếp tục với ô tiếp theo
+                if backtrack(assignment, var_index + 1):
+                    return True
+            
+            # Quay lui (backtrack)
+            assignment[current_var[0]][current_var[1]] = 0
+            draw_state_with_current_var(assignment, current_var)
+        
+        return False    
+    
+    solution_found = backtrack(current_state, 0)
+    
+    if solution_found:
+        for _ in range(3):  
+            draw_state_with_current_var(current_state, None)
+            pygame.time.delay(200)
+            csp_window.fill((30, 30, 30))
+            pygame.display.flip()
+            pygame.time.delay(200)
+    
+    pygame.display.set_caption("8-Puzzle AI Solver")
+    return solution_found
+
+def backtracking_with_forward_checking(start, goal):
+    """Giải bằng Backtracking với Forward Checking và hiệu ứng điền từng ô"""
+    csp_window = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Backtracking with Forward Checking Visual Solver")
+    
+    current_state = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
+    
+    variables = [(i, j) for i in range(GRID_SIZE) for j in range(GRID_SIZE)]
+    
+    domains = {var: set(range(1, 9)) for var in variables}  # Các số từ 1-8
+
+    # Hàm kiểm tra tính hợp lệ 
+    def is_valid(state, var, value):
+        row, col = var
+        
+        for j in range(GRID_SIZE):
+            if j != col and state[row][j] == value:
+                return False
+        
+        for i in range(GRID_SIZE):
+            if i != row and state[i][col] == value:
+                return False
+        
+        for prev_row in range(row): 
+            if value in state[prev_row]:
+                return False
+        
+        return True
+    
+    # Hàm hiển thị trạng thái 
+    def draw_state_with_current_var(state, current_var=None):
+        csp_window.fill((30, 30, 30))
+        grid_start_x = (WIDTH - (TILE_SIZE * GRID_SIZE)) // 2
+        grid_start_y = 30
+        
+        for i in range(GRID_SIZE):
+            for j in range(GRID_SIZE):
+                value = state[i][j]
+                rect = pygame.Rect(
+                    grid_start_x + j * TILE_SIZE,
+                    grid_start_y + i * TILE_SIZE,
+                    TILE_SIZE,
+                    TILE_SIZE
+                )
+                
+                if current_var and (i,j) == current_var:
+                    pygame.draw.rect(csp_window, (200, 200, 100), rect, border_radius=6)
+                    pygame.draw.rect(csp_window, (0, 0, 0), rect, 2)
+                elif value == 0:
+                    pygame.draw.rect(csp_window, (100, 100, 100), rect, border_radius=6)
+                    pygame.draw.rect(csp_window, (0, 0, 0), rect, 2)
+                else:
+                    color = TILE_COLORS[value]
+                    pygame.draw.rect(csp_window, color, rect, border_radius=6)
+                    pygame.draw.rect(csp_window, (0, 0, 0), rect, 2)
+                
+                if value != 0:
+                    text = font.render(str(value), True, (255, 255, 255))
+                    text_rect = text.get_rect(center=rect.center)
+                    csp_window.blit(text, text_rect)
+                elif current_var and (i,j) == current_var:
+                    text = font.render("?", True, (0, 0, 0))
+                    text_rect = text.get_rect(center=rect.center)
+                    csp_window.blit(text, text_rect)
+        
+        pygame.display.flip()
+        pygame.time.delay(STEP_DELAY)
+    
+    # Hàm forward checking - kiểm tra và cập nhật domains
+    def forward_check(assignment, var, value, domains):
+        row, col = var
+        new_domains = {v: domains[v].copy() for v in domains}
+        
+        # Loại bỏ giá trị đã chọn khỏi các ô trong cùng hàng
+        for j in range(GRID_SIZE):
+            if j != col and assignment[row][j] == 0:
+                new_domains[(row, j)].discard(value)
+                if len(new_domains[(row, j)]) == 0:
+                    return None  
+        
+        # Loại bỏ giá trị đã chọn khỏi các ô trong cùng cột
+        for i in range(GRID_SIZE):
+            if i != row and assignment[i][col] == 0:
+                new_domains[(i, col)].discard(value)
+                if len(new_domains[(i, col)]) == 0:
+                    return None  # Phát hiện domain rỗng
+        
+        # Loại bỏ giá trị đã chọn khỏi các ô trong các hàng trên
+        for prev_row in range(row):
+            for j in range(GRID_SIZE):
+                if assignment[prev_row][j] == 0:
+                    new_domains[(prev_row, j)].discard(value)
+                    if len(new_domains[(prev_row, j)]) == 0:
+                        return None  # Phát hiện domain rỗng
+        
+        return new_domains
+    
+    # Hàm đệ quy backtracking với forward checking
+    def backtrack(assignment, var_index, domains):
+        # Kiểm tra nếu đạt goal_state thì dừng
+        if all(assignment[i][j] == goal[i][j] for i in range(GRID_SIZE) for j in range(GRID_SIZE)):
+            return True
+        
+        # Nếu đã điền hết tất cả các ô mà chưa đạt goal_state
+        if var_index >= len(variables):
+            return False
+        
+        current_var = variables[var_index]
+        
+        # Thử các giá trị trong domain
+        for value in sorted(domains[current_var]):
+            # Gán giá trị tạm thời
+            assignment[current_var[0]][current_var[1]] = value
+            draw_state_with_current_var(assignment, current_var)
+            
+            # Kiểm tra ràng buộc
+            if is_valid(assignment, current_var, value):
+                # Thực hiện forward checking
+                new_domains = forward_check(assignment, current_var, value, domains)
+                
+                if new_domains is not None:  # Nếu forward checking thành công
+                    # Tiếp tục với ô tiếp theo và domains mới
+                    if backtrack(assignment, var_index + 1, new_domains):
+                        return True
+            
+            # Quay lui (backtrack)
+            assignment[current_var[0]][current_var[1]] = 0
+            draw_state_with_current_var(assignment, current_var)
+        
+        return False    
+    
+    # Chạy thuật toán
+    solution_found = backtrack(current_state, 0, domains)
+    
+    # Hiển thị kết quả cuối cùng
+    if solution_found:
+        for _ in range(10):  # Nhấp nháy kết quả
+            draw_state_with_current_var(current_state, None)
+            pygame.time.delay(200)
+            csp_window.fill((30, 30, 30))
+            pygame.display.flip()
+            pygame.time.delay(200)
+    
+    # Đóng cửa sổ CSP sau khi hoàn thành
+    pygame.display.set_caption("8-Puzzle AI Solver")
+    return solution_found
+
 
 #Triển khai thuật toán Q-learning
 class QLearningSolver:
@@ -1165,42 +1201,41 @@ def q_learning(start, goal, episodes=1000, max_steps=100):
     
     return solution_path if solution_path[-1] == goal else None
 
-def generate_new_state():
-    """Tạo trạng thái ban đầu mới ngẫu nhiên nhưng có thể giải được"""
-    # Tạo danh sách các số từ 0-8
-    numbers = list(range(9))
-    random.shuffle(numbers)
+def generate_new_state(num_moves=20):
+    """Tạo trạng thái ban đầu mới bằng cách thực hiện các bước di chuyển hợp lệ từ goal_state"""
+    current_state = goal_state
     
-    # Kiểm tra xem trạng thái có thể giải được không
-    def is_solvable(state):
-        # Đếm số nghịch thế
-        inversions = 0
-        flat_state = [num for row in state for num in row]
-        for i in range(len(flat_state)):
-            for j in range(i + 1, len(flat_state)):
-                if flat_state[i] != 0 and flat_state[j] != 0 and flat_state[i] > flat_state[j]:
-                    inversions += 1
-        return inversions % 2 == 0
+    for _ in range(num_moves):
+        blank_i, blank_j = find_blank(current_state)
+        possible_moves = []
+        
+        # Tạo danh sách các bước di chuyển hợp lệ
+        for di, dj in directions:
+            ni, nj = blank_i + di, blank_j + dj
+            if 0 <= ni < GRID_SIZE and 0 <= nj < GRID_SIZE:
+                possible_moves.append((di, dj))
+        
+        # Chọn ngẫu nhiên một bước di chuyển hợp lệ
+        if possible_moves:
+            di, dj = random.choice(possible_moves)
+            ni, nj = blank_i + di, blank_j + dj
+            current_state = swap_tiles(current_state, blank_i, blank_j, ni, nj)
     
-    # Tạo trạng thái mới cho đến khi tìm được trạng thái có thể giải được
-    while True:
-        random.shuffle(numbers)
-        new_state = (
-            (numbers[0], numbers[1], numbers[2]),
-            (numbers[3], numbers[4], numbers[5]),
-            (numbers[6], numbers[7], numbers[8])
-        )
-        if is_solvable(new_state):
-            return new_state
-
+    return current_state
 def main():
-    global selected_algorithm, highlighted_tiles, execution_time, start_state
+    global selected_algorithm, highlighted_tiles, execution_time, start_state, current_step, total_steps
     running = True
     path = None
-    step = 0
+    current_step = 0
     
     while running:
-        current_state = path[step] if path and len(path) > step else start_state
+        if path:
+            total_steps = len(path) - 1
+            current_state = path[current_step] if current_step < len(path) else path[-1]
+        else:
+            total_steps = 0
+            current_state = start_state
+            
         draw_grid(current_state)
         draw_execution_time()
         buttons = draw_buttons()
@@ -1258,22 +1293,21 @@ def main():
                                 path = backtracking_with_forward_checking(start_state, goal_state)
                             elif algo == "BT":
                                 path = BT(start_state, goal_state)
-                            elif algo == "Min-Conflicts":
-                                path = min_conflicts(start_state, goal_state)
                             elif algo == "Q-Learning":
                                 path = q_learning(start_state, goal_state)
                             
                             end_time = time.time()
                             execution_time = f"{end_time - start_time:.4f} seconds"
+                            current_step = 0 
                             if path:
                                 print(f"\n{algo} path has {len(path)} steps")
                             else:
                                 print(f"\n{algo} failed to find solution!")
                             step = 0
         
-        if path and step < len(path) - 1:
+        if path and current_step < total_steps:
             pygame.time.delay(STEP_DELAY)
-            step += 1
+            current_step += 1
     
     pygame.quit()
     sys.exit()
